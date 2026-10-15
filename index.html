@@ -1,1 +1,650 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Δήλωση Διάθεσης Εκπροσώπησης Μ.Δ. - Ε.Μ.Σ.Ε.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Noto+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0b1f3a;
+      --primary-light: #18335a;
+      --gold: #c5a059;
+      --gold-light: #e5c98d;
+      --gold-dark: #9e7b37;
+      --bg: #f4f6f9;
+      --card-bg: #ffffff;
+      --text: #22252a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #15803d;
+      --shadow: 0 10px 25px -5px rgba(11, 31, 58, 0.1), 0 8px 10px -6px rgba(11, 31, 58, 0.05);
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 50px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #06101e 100%);
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 4px solid var(--gold);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .header-logo {
+      font-size: 38px;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 24px;
+      letter-spacing: 2.5px;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+    .header-divider {
+      width: 80px;
+      height: 2px;
+      background: var(--gold);
+      margin: 12px auto;
+    }
+    header h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 17px;
+      letter-spacing: 1.2px;
+      color: #ffffff;
+      background: rgba(197, 160, 89, 0.18);
+      display: inline-block;
+      padding: 8px 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(197, 160, 89, 0.4);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .tab-btn {
+      padding: 12px 24px;
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      cursor: pointer;
+      background: #fff;
+      color: var(--primary);
+      transition: all 0.25s ease;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--primary);
+      color: var(--gold-light);
+      border-color: var(--primary);
+    }
+
+    /* Cards & Forms */
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 25px;
+    }
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      color: var(--primary);
+      border-left: 4px solid var(--gold);
+      padding-left: 12px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    select, input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+      font-family: inherit;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
+    }
+
+    /* Meeting Item Checkbox List */
+    .meetings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .meeting-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fafbfc;
+      transition: all 0.2s;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .meeting-card:hover {
+      border-color: var(--gold);
+      background: #fffdf8;
+    }
+    .meeting-card input[type="checkbox"] {
+      margin-top: 4px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold-dark);
+      cursor: pointer;
+    }
+    .meeting-info h4 {
+      font-size: 15px;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .meeting-info .date-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #334155;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+    .meeting-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(158, 123, 55, 0.3);
+      transition: all 0.2s;
+    }
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #d3ad65 0%, #896728 100%);
+      transform: translateY(-1px);
+    }
+
+    /* Alert / Messages */
+    .alert {
+      padding: 14px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .alert-success {
+      background-color: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    .alert-error {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* Reports & Tables */
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .report-table th, .report-table td {
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 13px;
+    }
+    .report-table th {
+      background-color: var(--primary);
+      color: var(--gold-light);
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .report-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    .officer-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin: 2px;
+      font-weight: 600;
+      border: 1px solid #c7d2fe;
+    }
+    .empty-note {
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .report-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .btn-secondary {
+      background: #475569;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .btn-print {
+      background: var(--gold-dark);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Printable format */
+    @media print {
+      body * { visibility: hidden; }
+      #printable-report, #printable-report * { visibility: visible; }
+      #printable-report {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none;
+        border: none;
+      }
+      .report-actions, .nav-tabs, header { display: none !important; }
+      .print-header { display: block !important; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 15px; }
+      .print-header h1 { font-size: 18px; margin-bottom: 5px; }
+      .print-header h2 { font-size: 14px; font-weight: normal; margin-bottom: 5px; }
+      .print-header h3 { font-size: 13px; font-weight: bold; }
+    }
+    .print-header { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-logo">🏛️</div>
+    <h1>Εθνική Μεγάλη Στοά της Ελλάδος</h1>
+    <h2>Μεγάλη Γραμματεία</h2>
+    <div class="header-divider"></div>
+    <h3>Πίνακας Δήλωσης Διάθεσης για Εκπροσώπηση Μ.Δ. σε Εγκαταστάσεις Σεβ. Διδ.</h3>
+  </header>
+
+  <div class="container">
+    <!-- Tabs Navigation -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchView('form')">Δήλωση Ενδιαφέροντος</button>
+      <button class="tab-btn" onclick="switchView('report')">Διαχειριστική Αναφορά & PDF</button>
+    </div>
+
+    <!-- VIEW 1: Φόρμα Δήλωσης Ενδιαφέροντος -->
+    <div id="form-view">
+      <div id="alert-msg" class="alert"></div>
+
+      <div class="card">
+        <h2 class="card-title">1. Στοιχεία Αξιωματικού</h2>
+        <div class="form-group">
+          <label for="officer-select">Επιλέξτε το Ονοματεπώνυμό σας & Αξίωμα:</label>
+          <select id="officer-select">
+            <option value="">-- Επιλέξτε από τον κατάλογο --</option>
+            <optgroup label="Εν Ενεργεία Μεγάλοι Αξιωματικοί (2026)">
+              <option value="Αλμπάνης Αναστάσιος (Αναπληρωτής Μέγας Διδάσκαλος · Πσεβ. · 2026)">Αλμπάνης Αναστάσιος — Αναπληρωτής Μέγας Διδάσκαλος</option>
+              <option value="Νικολαϊδης Αθανάσιος (Βοηθός Μέγας Διδάσκαλος · Πσεβ. · 2026)">Νικολαϊδης Αθανάσιος — Βοηθός Μέγας Διδάσκαλος</option>
+              <option value="Ζαχαριάς Βασίλειος (Επαρχιακός Μέγας Διδάσκαλος · Πσεβ. · 2026)">Ζαχαριάς Βασίλειος — Επαρχιακός Μέγας Διδάσκαλος</option>
+              <option value="Παναγάκος Δημήτριος (Πρώτος Μέγας Επόπτης · Πσεβ. · 2026)">Παναγάκος Δημήτριος — Πρώτος Μέγας Επόπτης</option>
+              <option value="Καββαδίας Κωνσταντίνος (Δεύτερος Μέγας Επόπτης · Πσεβ. · 2026)">Καββαδίας Κωνσταντίνος — Δεύτερος Μέγας Επόπτης</option>
+              <option value="Τσουνάκος Ανδρέας (Μέγας Ευχέτης · ΛΣεβ. · 2026)">Τσουνάκος Ανδρέας — Μέγας Ευχέτης</option>
+              <option value="Φασούλας Στυλιανός (Πρόεδρος Συμβ. Γεν. Υποθέσεων · Σεβτ. · 2026)">Φασούλας Στυλιανός — Πρόεδρος Συμβουλίου Γενικών Υποθέσεων</option>
+              <option value="Δημητρίου Φίλιππος (Μέγας Νομοφύλαξ · ΛΣεβ. · 2026)">Δημητρίου Φίλιππος — Μέγας Νομοφύλαξ</option>
+              <option value="Σκιαδοπουλος Δημήτριος (Μέγας Γραμματεύς · Πσεβ. · 2026)">Σκιαδόπουλος Δημήτριος — Μέγας Γραμματεύς</option>
+              <option value="Δουβάρας Νικόλαος (Μέγας Γραμματεύς Εκπαιδεύσεως · Πσεβ. · 2026)">Δουβάρας Νικόλαος — Μέγας Γραμματεύς Εκπαιδεύσεως</option>
+              <option value="Βλάχος Παναγιώτης (Μέγας Θησαυροφύλαξ · Πσεβ. · 2026)">Βλάχος Παναγιώτης — Μέγας Θησαυροφύλαξ</option>
+              <option value="Ζωγραφάκης Δημήτριος (Πρόεδρος Μεγάλου Αγαθοεργού Σώματος · ΛΣεβ. · 2026)">Ζωγραφάκης Δημήτριος — Πρόεδρος Μεγάλου Αγαθοεργού Σώματος</option>
+              <option value="Καλογεράκος Κων/νος (Μέγας Τελετάρχης · Πσεβ. · 2026)">Καλογεράκος Κων/νος — Μέγας Τελετάρχης</option>
+              <option value="Ευφραιμίδης Αναστάσιος (Μέγας Ξιφοφόρος · ΛΣεβ. · 2026)">Ευφραιμίδης Αναστάσιος — Μέγας Ξιφοφόρος</option>
+              <option value="Παντούλας Γεώργιος (Μέγας Επίτροπος των Έργων · ΛΣεβ. · 2026)">Παντούλας Γεώργιος — Μέγας Επίτροπος των Έργων</option>
+              <option value="Χατζηδημητρίου Νικόλαος (Αναπληρωτής Μέγας Γραμματεύς · ΛΣεβ. · 2026)">Χατζηδημητρίου Νικόλαος — Αναπληρωτής Μέγας Γραμματεύς</option>
+              <option value="Δαγαράκης Ιωάννης (Αναπληρωτής Μέγας Καγκελάριος · Σεβ. · 2026)">Δαγαράκης Ιωάννης — Αναπληρωτής Μέγας Καγκελάριος</option>
+              <option value="Γρίσπος Άγγελος (Αναπληρωτής Μέγας Τελετάρχης · Πσεβ. · 2026)">Γρίσπος Άγγελος — Αναπληρωτής Μέγας Τελετάρχης</option>
+              <option value="Κούκουρας Βασίλειος (Αναπληρωτής Μέγας Τελετάρχης · ΛΣεβ. · 2026)">Κούκουρας Βασίλειος — Αναπληρωτής Μέγας Τελετάρχης</option>
+              <option value="Λεπτοκαρύδης Φίλιππος (Μέγας Έφορος Βιβλιοθήκης & Μουσείου · Πσεβ. · 2026)">Λεπτοκαρύδης Φίλιππος — Μέγας Έφορος Βιβλιοθήκης & Μουσείου</option>
+              <option value="Πιπέρης Βασίλειος (Πρώτος Μέγας Διάκονος · Σεβ. · 2026)">Πιπέρης Βασίλειος — Πρώτος Μέγας Διάκονος</option>
+              <option value="Γκρίλλας Γεώργιος (Δεύτερος Μέγας Διάκονος · Σεβ. · 2026)">Γκρίλλας Γεώργιος — Δεύτερος Μέγας Διάκονος</option>
+              <option value="Γρηγορίου Δημοσθένης (Βοηθός Μέγας Καγκελάριος · Σεβ. · 2026)">Γρηγορίου Δημοσθένης — Βοηθός Μέγας Καγκελάριος</option>
+              <option value="Διαβάτης Χρήστος (Βοηθός Μέγας Γραμματεύς · ΛΣεβ. · 2026)">Διαβάτης Χρήστος — Βοηθός Μέγας Γραμματεύς</option>
+              <option value="Τσαγκαρουσιάνος Χρήστος (Βοηθός Μέγας Γραμματεύς · ΛΣεβ. · 2026)">Τσαγκαρουσιάνος Χρήστος — Βοηθός Μέγας Γραμματεύς</option>
+              <option value="Καρμάλης Κωνσταντίνος (Μέγας Έφορος επί των Διασήμων · Σεβ. · 2026)">Καρμάλης Κωνσταντίνος — Μέγας Έφορος επί των Διασήμων</option>
+              <option value="Ασπιώτης Νικόλαος (Μέγας Οργανιστής · Σεβ. · 2026)">Ασπιώτης Νικόλαος — Μέγας Οργανιστής</option>
+              <option value="Αδαμάκος Κωνσταντίνος (Μέγας Σημαιοφόρος · Σεβ. · 2026)">Αδαμάκος Κωνσταντίνος — Μέγας Σημαιοφόρος</option>
+              <option value="Πιπιλίγκας Γεώργιος (Μέγας Προσαγωγεύς · ΛΣεβ. · 2026)">Πιπιλίγκας Γεώργιος — Μέγας Προσαγωγεύς</option>
+              <option value="Κουφαλιτάκης Γεώργιος (Μέγας Στεγαστής · Σεβ. · 2026)">Κουφαλιτάκης Γεώργιος — Μέγας Στεγαστής</option>
+            </optgroup>
+            <optgroup label="Πρώην Μεγάλοι Αξιωματικοί (Επιλεγμένοι / Συχνή Παρουσία)">
+              <option value="Δούκας Σπυρίδων (Πρώην Επαρχιακός Μέγας Διδάσκαλος · Πσεβ.)">Δούκας Σπυρίδων — Πρώην Επαρχιακός Μέγας Διδάσκαλος</option>
+              <option value="Γεράκιος Εμμανουήλ (Πρώην Μέγας Διδάσκαλος · Σεβτ.)">Γεράκιος Εμμανουήλ — Πρώην Μέγας Διδάσκαλος</option>
+              <option value="Δεληγιώργης Γεώργιος (Πρώην Μέγας Διδάσκαλος · Σεβτ.)">Δεληγιώργης Γεώργιος — Πρώην Μέγας Διδάσκαλος</option>
+              <option value="Σάμιος Αριστείδης (Πρώην Αναπληρωτής Μέγας Διδάσκαλος · Πσεβ.)">Σάμιος Αριστείδης — Πρώην Αναπληρωτής Μέγας Διδάσκαλος</option>
+              <option value="Τριβυζάς Ιωάννης (Πρώην Βοηθός Μέγας Διδάσκαλος · Πσεβ.)">Τριβυζάς Ιωάννης — Πρώην Βοηθός Μέγας Διδάσκαλος</option>
+              <option value="Παπαλουκάς Αριστοφάνης (Πρώην Πρώτος Μέγας Επόπτης · Πσεβ.)">Παπαλουκάς Αριστοφάνης — Πρώην Πρώτος Μέγας Επόπτης</option>
+              <option value="Σκιαδόπουλος Σπυρίδων (Πρώην Πρώτος Μέγας Επόπτης · Πσεβ.)">Σκιαδόπουλος Σπυρίδων — Πρώην Πρώτος Μέγας Επόπτης</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ή συμπληρώστε χειροκίνητα (αν δεν είστε στην παραπάνω λίστα):</label>
+          <input type="text" id="officer-manual" placeholder="Ονοματεπώνυμο & Αξίωμα">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">2. Επιλογή Εργασιών Νοεμβρίου 2026 για Εκπροσώπηση</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">
+          Επιλέξτε μία ή περισσότερες Στοές στις οποίες έχετε τη δυνατότητα και επιθυμείτε να εκπροσωπήσετε τον Μέγα Διδάσκαλο:
+        </p>
+
+        <div class="meetings-grid" id="meetings-list">
+          <!-- Populated by JS -->
+        </div>
+
+        <div style="margin-top: 25px;">
+          <button type="button" class="btn-submit" onclick="submitDeclaration()">Υποβολη Δηλωσης Διαθεσης</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: Προστατευμένη Αναφορά με Κωδικό -->
+    <div id="report-view" style="display: none;">
+      <!-- Password Prompt Card -->
+      <div id="auth-box" class="card" style="max-width: 480px; margin: 40px auto; text-align: center;">
+        <h2 class="card-title" style="border: none; padding: 0;">Είσοδος Μεγάλης Γραμματείας</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+          Απαιτείται κωδικός ασφαλείας για την προβολή των δηλώσεων και την εξαγωγή της αναφοράς.
+        </p>
+        <div class="form-group" style="text-align: left;">
+          <label for="admin-pass">Κωδικός Πρόσβασης:</label>
+          <input type="password" id="admin-pass" placeholder="Εισάγετε τον κωδικό">
+        </div>
+        <button class="btn-submit" onclick="checkAuth()">Εισοδος στην Αναφορα</button>
+      </div>
+
+      <!-- Actual Report Content (Hidden initially) -->
+      <div id="report-content" style="display: none;">
+        <div class="card" id="printable-report">
+          <!-- Print Only Official Header -->
+          <div class="print-header">
+            <h1>ΕΘΝΙΚΗ ΜΕΓΑΛΗ ΣΤΟΑ ΤΗΣ ΕΛΛΑΔΟΣ</h1>
+            <h2>ΜΕΓΑΛΗ ΓΡΑΜΜΑΤΕΙΑ</h2>
+            <h3>ΚΑΤΑΣΤΑΣΗ ΕΚΠΡΟΣΩΠΗΣΕΩΝ ΜΕΓΑΛΟΥ ΔΙΔΑΣΚΑΛΟΥ — ΝΟΕΜΒΡΙΟΣ 2026</h3>
+            <p style="font-size: 11px; margin-top: 5px;">Ημερομηνία εξαγωγής: <span id="print-date"></span></p>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2 class="card-title" style="margin-bottom: 0;">Συγκεντρωτική Αναφορά Δηλώσεων Εκπροσώπησης Μ.Δ.</h2>
+            <span style="font-size: 12px; color: var(--text-muted);">Μήνας: <strong>Νοέμβριος 2026</strong></span>
+          </div>
+
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th style="width: 22%;">Ημερομηνία</th>
+                <th style="width: 28%;">Σ.Σ. & Αριθμός</th>
+                <th style="width: 25%;">Επαρχιακή Μεγάλη Στοά</th>
+                <th style="width: 25%;">Δηλώσεις Αξιωματικών</th>
+              </tr>
+            </thead>
+            <tbody id="report-table-body">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+
+          <div class="report-actions">
+            <button class="btn-secondary" onclick="clearDataPrompt()">Εκκαθάριση Δεδομένων</button>
+            <button class="btn-print" onclick="window.print()">
+              🖨️ Προεπισκόπηση & Λήψη PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Στοιχεία Εργασιών Νοεμβρίου 2026
+    const MEETINGS = [
+      { id: "akropolis_104", date: "Δευτέρα 02/11/2026", name: "ΑΚΡΟΠΟΛΙΣ", no: "104", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "epimelites_74",  date: "Τρίτη 03/11/2026",    name: "ΜΕΓΑΛΩΝ ΕΠΙΜΕΛΗΤΩΝ", no: "74", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "isotis_97",      date: "Τρίτη 03/11/2026",    name: "ΙΣΟΤΗΣ 1882", no: "97", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "triptolemos_19", date: "Πέμπτη 05/11/2026",   name: "ΤΡΙΠΤΟΛΕΜΟΣ", no: "19", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "enosis_16",      date: "Τετάρτη 11/11/2026",  name: "ΕΝΩΣΙΣ ΛΕΥΚΑΔΟΣ", no: "16", prov: "ΕπΜΣτ. Ιονίων Νήσων" },
+      { id: "athina_78",      date: "Τετάρτη 11/11/2026",  name: "ΑΘΗΝΑ ΣΤΑΘΜΙΑ", no: "78", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "lapaix_95",      date: "Τετάρτη 11/11/2026",  name: "LA PAIX", no: "95", prov: "ΕπΜΣτ. Ιονίων Νήσων" },
+      { id: "omiros_59",      date: "Παρασκευή 20/11/2026",name: "ΟΜΗΡΟΣ", no: "59", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "makedon_106",    date: "Σάββατο 21/11/2026",  name: "ΜΑΚΕΔΩΝ", no: "106", prov: "ΕπΜΣτ. Κεντρικής & Βορείου Ελλάδος" },
+      { id: "nagos_111",      date: "Δευτέρα 23/11/2026",  name: "ΣΠΥΡΙΔΩΝ ΝΑΓΟΣ", no: "111", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "empedoklis_15",  date: "Παρασκευή 27/11/2026",name: "ΕΜΠΕΔΟΚΛΗΣ", no: "15", prov: "ΕπΜΣτ. Πειραιώς & Νήσων Αρχ. Αιγαίου" }
+    ];
+
+    const AUTH_PASS = "Diavatis27$";
+
+    // Αρχικοποίηση λίστας εργασιών
+    function initMeetingsGrid() {
+      const grid = document.getElementById("meetings-list");
+      grid.innerHTML = "";
+      MEETINGS.forEach(m => {
+        const card = document.createElement("label");
+        card.className = "meeting-card";
+        card.innerHTML = `
+          <input type="checkbox" name="meeting_select" value="${m.id}">
+          <div class="meeting-info">
+            <span class="date-badge">${m.date}</span>
+            <h4>${m.name} Αρ. ${m.no}</h4>
+            <p>${m.prov}</p>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Διαχείριση Tabs
+    function switchView(view) {
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      tabBtns.forEach(btn => btn.classList.remove("active"));
+
+      if (view === 'form') {
+        tabBtns[0].classList.add("active");
+        document.getElementById("form-view").style.display = "block";
+        document.getElementById("report-view").style.display = "none";
+      } else {
+        tabBtns[1].classList.add("active");
+        document.getElementById("form-view").style.display = "none";
+        document.getElementById("report-view").style.display = "block";
+      }
+    }
+
+    // Αποθήκευση Δηλώσεων
+    function submitDeclaration() {
+      const selectVal = document.getElementById("officer-select").value;
+      const manualVal = document.getElementById("officer-manual").value.trim();
+      const officer = manualVal || selectVal;
+
+      const alertBox = document.getElementById("alert-msg");
+      alertBox.style.display = "none";
+
+      if (!officer) {
+        alertBox.className = "alert alert-error";
+        alertBox.innerText = "Παρακαλούμε επιλέξτε ή πληκτρολογήστε το ονοματεπώνυμο και το αξίωμά σας.";
+        alertBox.style.display = "block";
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+        return;
+      }
+
+      const selectedBoxes = Array.from(document.querySelectorAll("input[name='meeting_select']:checked"));
+      if (selectedBoxes.length === 0) {
+        alertBox.className = "alert alert-error";
+        alertBox.innerText = "Παρακαλούμε επιλέξτε τουλάχιστον μία Στοά / Εργασία στην οποία επιθυμείτε να παραστείτε.";
+        alertBox.style.display = "block";
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+        return;
+      }
+
+      // Λήψη υπαρχόντων δεδομένων από localStorage
+      let store = JSON.parse(localStorage.getItem("emse_declarations_nov2026") || "{}");
+
+      selectedBoxes.forEach(chk => {
+        const meetingId = chk.value;
+        if (!store[meetingId]) {
+          store[meetingId] = [];
+        }
+        if (!store[meetingId].includes(officer)) {
+          store[meetingId].push(officer);
+        }
+      });
+
+      localStorage.setItem("emse_declarations_nov2026", JSON.stringify(store));
+
+      // Feedback επιτυχίας
+      alertBox.className = "alert alert-success";
+      alertBox.innerText = "Η δήλωση ενδιαφέροντος καταχωρήθηκε επιτυχώς στη Μεγάλη Γραμματεία!";
+      alertBox.style.display = "block";
+
+      // Reset
+      document.getElementById("officer-select").value = "";
+      document.getElementById("officer-manual").value = "";
+      selectedBoxes.forEach(chk => chk.checked = false);
+
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    }
+
+    // Έλεγχος Κωδικού για Αναφορά
+    function checkAuth() {
+      const enteredPass = document.getElementById("admin-pass").value;
+      if (enteredPass === AUTH_PASS) {
+        document.getElementById("auth-box").style.display = "none";
+        document.getElementById("report-content").style.display = "block";
+        renderReportTable();
+      } else {
+        alert("Λανθασμένος κωδικός πρόσβασης Μεγάλης Γραμματείας.");
+      }
+    }
+
+    // Σχεδιασμός Πίνακα Αναφοράς
+    function renderReportTable() {
+      const tbody = document.getElementById("report-table-body");
+      tbody.innerHTML = "";
+      const store = JSON.parse(localStorage.getItem("emse_declarations_nov2026") || "{}");
+      document.getElementById("print-date").innerText = new Date().toLocaleDateString('el-GR');
+
+      MEETINGS.forEach(m => {
+        const tr = document.createElement("tr");
+        const officers = store[m.id] || [];
+
+        let officersHtml = "";
+        if (officers.length === 0) {
+          officersHtml = `<span class="empty-note">Δεν έχει δηλωθεί εκπρόσωπος</span>`;
+        } else {
+          officersHtml = officers.map(o => `<span class="officer-tag">👤 ${o}</span>`).join(" ");
+        }
+
+        tr.innerHTML = `
+          <td><strong>${m.date}</strong></td>
+          <td><strong>${m.name}</strong> (Αρ. ${m.no})</td>
+          <td>${m.prov}</td>
+          <td>${officersHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Καθαρισμός δεδομένων (προαιρετικό)
+    function clearDataPrompt() {
+      if (confirm("Προσοχή: Επιθυμείτε τη διαγραφή όλων των καταχωρημένων δηλώσεων ενδιαφέροντος;")) {
+        localStorage.removeItem("emse_declarations_nov2026");
+        renderReportTable();
+      }
+    }
+
+    // Εκκίνηση
+    window.onload = function() {
+      initMeetingsGrid();
+    };
+  </script>
+</body>
+</html>
