@@ -6,7 +6,6 @@
  * Οδηγίες εγκατάστασης: δείτε README.md
  */
 
-const SHEET_NAME = 'Δηλώσεις';
 const HEADERS = ['Χρονοσήμανση', 'Αξιωματικός', 'Κωδικός Εργασίας'];
 
 // Πρέπει να συμφωνεί με τη λίστα MEETINGS στο index.html
@@ -82,13 +81,10 @@ function report_(body) {
 }
 
 function getSheet_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName(SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(HEADERS);
-    sheet.setFrozenRows(1);
-  }
+  // Χρησιμοποιεί το πρώτο φύλλο του Sheet
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
+  sheet.setFrozenRows(1);
   return sheet;
 }
 
