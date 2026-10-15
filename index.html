@@ -189,6 +189,20 @@
       accent-color: var(--gold-dark);
       cursor: pointer;
     }
+    .meeting-info {
+      flex: 1;
+    }
+    .lodge-logo {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+    .lodge-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .meeting-info h4 {
       font-size: 15px;
       color: var(--primary);
@@ -504,7 +518,7 @@
     // Στοιχεία Εργασιών Νοεμβρίου 2026
     const MEETINGS = [
       { id: "akropolis_104", date: "Δευτέρα 02/11/2026", name: "ΑΚΡΟΠΟΛΙΣ", no: "104", prov: "ΕπΜΣτ. Αθηνών" },
-      { id: "atlas_118",      date: "Δευτέρα 02/11/2026",  name: "ΑΤΛΑΣ", no: "118", prov: "ΕπΜΣτ. Πειραιώς & Νήσων Αρχ. Αιγαίου", note: "Εγκαθίδρυση" },
+      { id: "atlas_118",      date: "Δευτέρα 02/11/2026",  name: "ΑΤΛΑΣ", no: "118", prov: "ΕπΜΣτ. Πειραιώς & Νήσων Αρχ. Αιγαίου", note: "Εγκαθίδρυση", logo: "img/atlas_118.png" },
       { id: "epimelites_74",  date: "Τρίτη 03/11/2026",    name: "ΜΕΓΑΛΩΝ ΕΠΙΜΕΛΗΤΩΝ", no: "74", prov: "ΕπΜΣτ. Αθηνών" },
       { id: "isotis_97",      date: "Τρίτη 03/11/2026",    name: "ΙΣΟΤΗΣ 1882", no: "97", prov: "ΕπΜΣτ. Αθηνών" },
       { id: "triptolemos_19", date: "Πέμπτη 05/11/2026",   name: "ΤΡΙΠΤΟΛΕΜΟΣ", no: "19", prov: "ΕπΜΣτ. Αθηνών" },
@@ -564,7 +578,8 @@
             <h4>${m.name} Αρ. ${m.no}</h4>${m.note ? `
             <p><strong>${m.note}</strong></p>` : ""}
             <p>${m.prov}</p>
-          </div>
+          </div>${m.logo ? `
+          <img class="lodge-logo" src="${m.logo}" alt="Θυρεός ${m.name}">` : ""}
         `;
         grid.appendChild(card);
       });
@@ -679,7 +694,7 @@
 
         tr.innerHTML = `
           <td><strong>${m.date}</strong></td>
-          <td><strong>${m.name}</strong> (Αρ. ${m.no})${m.note ? `<br><em>${m.note}</em>` : ""}</td>
+          <td><div class="lodge-cell">${m.logo ? `<img class="lodge-logo" src="${m.logo}" alt="Θυρεός ${m.name}">` : ""}<div><strong>${m.name}</strong> (Αρ. ${m.no})${m.note ? `<br><em>${m.note}</em>` : ""}</div></div></td>
           <td>${m.prov}</td>
           <td></td>
         `;
