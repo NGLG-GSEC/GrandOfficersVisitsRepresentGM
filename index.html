@@ -504,6 +504,7 @@
     // Στοιχεία Εργασιών Νοεμβρίου 2026
     const MEETINGS = [
       { id: "akropolis_104", date: "Δευτέρα 02/11/2026", name: "ΑΚΡΟΠΟΛΙΣ", no: "104", prov: "ΕπΜΣτ. Αθηνών" },
+      { id: "atlas_118",      date: "Δευτέρα 02/11/2026",  name: "ΑΤΛΑΣ", no: "118", prov: "ΕπΜΣτ. Πειραιώς & Νήσων Αρχ. Αιγαίου", note: "Εγκαθίδρυση" },
       { id: "epimelites_74",  date: "Τρίτη 03/11/2026",    name: "ΜΕΓΑΛΩΝ ΕΠΙΜΕΛΗΤΩΝ", no: "74", prov: "ΕπΜΣτ. Αθηνών" },
       { id: "isotis_97",      date: "Τρίτη 03/11/2026",    name: "ΙΣΟΤΗΣ 1882", no: "97", prov: "ΕπΜΣτ. Αθηνών" },
       { id: "triptolemos_19", date: "Πέμπτη 05/11/2026",   name: "ΤΡΙΠΤΟΛΕΜΟΣ", no: "19", prov: "ΕπΜΣτ. Αθηνών" },
@@ -560,7 +561,8 @@
           <input type="checkbox" name="meeting_select" value="${m.id}">
           <div class="meeting-info">
             <span class="date-badge">${m.date}</span>
-            <h4>${m.name} Αρ. ${m.no}</h4>
+            <h4>${m.name} Αρ. ${m.no}</h4>${m.note ? `
+            <p><strong>${m.note}</strong></p>` : ""}
             <p>${m.prov}</p>
           </div>
         `;
@@ -677,7 +679,7 @@
 
         tr.innerHTML = `
           <td><strong>${m.date}</strong></td>
-          <td><strong>${m.name}</strong> (Αρ. ${m.no})</td>
+          <td><strong>${m.name}</strong> (Αρ. ${m.no})${m.note ? `<br><em>${m.note}</em>` : ""}</td>
           <td>${m.prov}</td>
           <td></td>
         `;

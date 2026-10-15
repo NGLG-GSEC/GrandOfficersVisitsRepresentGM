@@ -8,12 +8,10 @@
 
 const HEADERS = ['Χρονοσήμανση', 'Αξιωματικός', 'Κωδικός Εργασίας'];
 
-// Πρέπει να συμφωνεί με τη λίστα MEETINGS στο index.html
-const VALID_MEETING_IDS = [
-  'akropolis_104', 'epimelites_74', 'isotis_97', 'triptolemos_19',
-  'enosis_16', 'athina_78', 'lapaix_95', 'omiros_59',
-  'makedon_106', 'nagos_111', 'empedoklis_15'
-];
+// Μορφή κωδικού Εργασίας (π.χ. "atlas_118"). Οι Εργασίες ορίζονται μόνο
+// στο index.html, ώστε η προσθήκη νέων να μη χρειάζεται νέα ανάπτυξη.
+const MEETING_ID_PATTERN = /^[a-z0-9_]{1,40}$/;
+const MAX_MEETINGS = 50;
 
 const MAX_OFFICER_LENGTH = 200;
 
@@ -33,7 +31,10 @@ function doPost(e) {
 function submit_(body) {
   const officer = String(body.officer || '').replace(/\s+/g, ' ').trim();
   const meetingIds = Array.isArray(body.meetings) ? body.meetings : [];
-  const valid = meetingIds.filter(id => VALID_MEETING_IDS.indexOf(id) !== -1);
+  const valid = meetingIds
+    .filter(id => typeof id === 'string' && MEETING_ID_PATTERN.test(id))
+    .filter((id, i, arr) => arr.indexOf(id) === i)
+    .slice(0, MAX_MEETINGS);
 
   if (!officer || officer.length > MAX_OFFICER_LENGTH) {
     return json_({ ok: false, error: 'invalid_officer' });
