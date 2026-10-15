@@ -94,6 +94,7 @@
     .nav-tabs {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
       gap: 15px;
       margin-bottom: 25px;
     }
@@ -223,7 +224,12 @@
       box-shadow: 0 4px 10px rgba(158, 123, 55, 0.3);
       transition: all 0.2s;
     }
-    .btn-submit:hover {
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: wait;
+      transform: none;
+    }
+    .btn-submit:hover:not(:disabled) {
       background: linear-gradient(135deg, #d3ad65 0%, #896728 100%);
       transform: translateY(-1px);
     }
@@ -248,7 +254,11 @@
     }
 
     /* Reports & Tables */
+    .table-wrap {
+      overflow-x: auto;
+    }
     .report-table {
+      min-width: 640px;
       width: 100%;
       border-collapse: collapse;
       margin-top: 15px;
@@ -330,6 +340,8 @@
         border: none;
       }
       .report-actions, .nav-tabs, header { display: none !important; }
+      .table-wrap { overflow: visible; }
+      .report-table { min-width: 0; }
       .print-header { display: block !important; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 15px; }
       .print-header h1 { font-size: 18px; margin-bottom: 5px; }
       .print-header h2 { font-size: 14px; font-weight: normal; margin-bottom: 5px; }
@@ -374,7 +386,7 @@
               <option value="Τσουνάκος Ανδρέας (Μέγας Ευχέτης · ΛΣεβ. · 2026)">Τσουνάκος Ανδρέας — Μέγας Ευχέτης</option>
               <option value="Φασούλας Στυλιανός (Πρόεδρος Συμβ. Γεν. Υποθέσεων · Σεβτ. · 2026)">Φασούλας Στυλιανός — Πρόεδρος Συμβουλίου Γενικών Υποθέσεων</option>
               <option value="Δημητρίου Φίλιππος (Μέγας Νομοφύλαξ · ΛΣεβ. · 2026)">Δημητρίου Φίλιππος — Μέγας Νομοφύλαξ</option>
-              <option value="Σκιαδοπουλος Δημήτριος (Μέγας Γραμματεύς · Πσεβ. · 2026)">Σκιαδόπουλος Δημήτριος — Μέγας Γραμματεύς</option>
+              <option value="Σκιαδόπουλος Δημήτριος (Μέγας Γραμματεύς · Πσεβ. · 2026)">Σκιαδόπουλος Δημήτριος — Μέγας Γραμματεύς</option>
               <option value="Δουβάρας Νικόλαος (Μέγας Γραμματεύς Εκπαιδεύσεως · Πσεβ. · 2026)">Δουβάρας Νικόλαος — Μέγας Γραμματεύς Εκπαιδεύσεως</option>
               <option value="Βλάχος Παναγιώτης (Μέγας Θησαυροφύλαξ · Πσεβ. · 2026)">Βλάχος Παναγιώτης — Μέγας Θησαυροφύλαξ</option>
               <option value="Ζωγραφάκης Δημήτριος (Πρόεδρος Μεγάλου Αγαθοεργού Σώματος · ΛΣεβ. · 2026)">Ζωγραφάκης Δημήτριος — Πρόεδρος Μεγάλου Αγαθοεργού Σώματος</option>
@@ -425,7 +437,7 @@
         </div>
 
         <div style="margin-top: 25px;">
-          <button type="button" class="btn-submit" onclick="submitDeclaration()">Υποβολη Δηλωσης Διαθεσης</button>
+          <button type="button" class="btn-submit" id="submit-btn" onclick="submitDeclaration()">Υποβολη Δηλωσης Διαθεσης</button>
         </div>
       </div>
     </div>
@@ -442,7 +454,7 @@
           <label for="admin-pass">Κωδικός Πρόσβασης:</label>
           <input type="password" id="admin-pass" placeholder="Εισάγετε τον κωδικό">
         </div>
-        <button class="btn-submit" onclick="checkAuth()">Εισοδος στην Αναφορα</button>
+        <button class="btn-submit" id="auth-btn" onclick="checkAuth()">Εισοδος στην Αναφορα</button>
       </div>
 
       <!-- Actual Report Content (Hidden initially) -->
@@ -461,6 +473,7 @@
             <span style="font-size: 12px; color: var(--text-muted);">Μήνας: <strong>Νοέμβριος 2026</strong></span>
           </div>
 
+          <div class="table-wrap">
           <table class="report-table">
             <thead>
               <tr>
@@ -474,9 +487,10 @@
               <!-- Populated by JS -->
             </tbody>
           </table>
+          </div>
 
           <div class="report-actions">
-            <button class="btn-secondary" onclick="clearDataPrompt()">Εκκαθάριση Δεδομένων</button>
+            <button class="btn-secondary" onclick="renderReportTable()">Ανανέωση</button>
             <button class="btn-print" onclick="window.print()">
               🖨️ Προεπισκόπηση & Λήψη PDF
             </button>
@@ -502,7 +516,38 @@
       { id: "empedoklis_15",  date: "Παρασκευή 27/11/2026",name: "ΕΜΠΕΔΟΚΛΗΣ", no: "15", prov: "ΕπΜΣτ. Πειραιώς & Νήσων Αρχ. Αιγαίου" }
     ];
 
-    const AUTH_PASS = "Diavatis27$";
+    // Διεύθυνση του Google Apps Script Web App (δείτε README.md)
+    const API_URL = "";
+
+    // Κωδικός που δόθηκε στην Είσοδο Μεγάλης Γραμματείας (κρατείται μόνο στη μνήμη)
+    let adminKey = "";
+
+    async function callApi(payload) {
+      if (!API_URL) throw new Error("not_configured");
+      // text/plain ώστε να μη χρειάζεται CORS preflight από το Apps Script
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error("http_" + res.status);
+      return res.json();
+    }
+
+    function showAlert(type, text) {
+      const alertBox = document.getElementById("alert-msg");
+      alertBox.className = "alert alert-" + type;
+      alertBox.innerText = text;
+      alertBox.style.display = "block";
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    }
+
+    function apiErrorText(err) {
+      if (err.message === "not_configured") {
+        return "Η φόρμα δεν έχει ακόμη συνδεθεί με τη Μεγάλη Γραμματεία. Παρακαλούμε επικοινωνήστε με τη Γραμματεία.";
+      }
+      return "Δεν ήταν δυνατή η επικοινωνία με τη Μεγάλη Γραμματεία. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.";
+    }
 
     // Αρχικοποίηση λίστας εργασιών
     function initMeetingsGrid() {
@@ -539,106 +584,123 @@
       }
     }
 
-    // Αποθήκευση Δηλώσεων
-    function submitDeclaration() {
+    // Υποβολή Δηλώσεων
+    async function submitDeclaration() {
       const selectVal = document.getElementById("officer-select").value;
       const manualVal = document.getElementById("officer-manual").value.trim();
+
+      document.getElementById("alert-msg").style.display = "none";
+
+      if (selectVal && manualVal) {
+        showAlert("error", "Παρακαλούμε είτε επιλέξτε το όνομά σας από τον κατάλογο είτε πληκτρολογήστε το χειροκίνητα — όχι και τα δύο.");
+        return;
+      }
       const officer = manualVal || selectVal;
-
-      const alertBox = document.getElementById("alert-msg");
-      alertBox.style.display = "none";
-
       if (!officer) {
-        alertBox.className = "alert alert-error";
-        alertBox.innerText = "Παρακαλούμε επιλέξτε ή πληκτρολογήστε το ονοματεπώνυμο και το αξίωμά σας.";
-        alertBox.style.display = "block";
-        window.scrollTo({ top: 100, behavior: 'smooth' });
+        showAlert("error", "Παρακαλούμε επιλέξτε ή πληκτρολογήστε το ονοματεπώνυμο και το αξίωμά σας.");
         return;
       }
 
       const selectedBoxes = Array.from(document.querySelectorAll("input[name='meeting_select']:checked"));
       if (selectedBoxes.length === 0) {
-        alertBox.className = "alert alert-error";
-        alertBox.innerText = "Παρακαλούμε επιλέξτε τουλάχιστον μία Στοά / Εργασία στην οποία επιθυμείτε να παραστείτε.";
-        alertBox.style.display = "block";
-        window.scrollTo({ top: 100, behavior: 'smooth' });
+        showAlert("error", "Παρακαλούμε επιλέξτε τουλάχιστον μία Στοά / Εργασία στην οποία επιθυμείτε να παραστείτε.");
         return;
       }
 
-      // Λήψη υπαρχόντων δεδομένων από localStorage
-      let store = JSON.parse(localStorage.getItem("emse_declarations_nov2026") || "{}");
+      const btn = document.getElementById("submit-btn");
+      btn.disabled = true;
+      try {
+        const result = await callApi({
+          action: "submit",
+          officer: officer,
+          meetings: selectedBoxes.map(chk => chk.value)
+        });
+        if (!result.ok) throw new Error(result.error);
 
-      selectedBoxes.forEach(chk => {
-        const meetingId = chk.value;
-        if (!store[meetingId]) {
-          store[meetingId] = [];
+        let msg = "Η δήλωση ενδιαφέροντος καταχωρήθηκε επιτυχώς στη Μεγάλη Γραμματεία!";
+        if (result.added === 0) {
+          msg = "Οι επιλεγμένες Εργασίες είχαν ήδη δηλωθεί από εσάς — δεν χρειάζεται νέα καταχώρηση.";
+        } else if (result.duplicates > 0) {
+          msg += " (" + result.duplicates + " από τις επιλογές είχαν ήδη δηλωθεί.)";
         }
-        if (!store[meetingId].includes(officer)) {
-          store[meetingId].push(officer);
-        }
-      });
+        showAlert("success", msg);
 
-      localStorage.setItem("emse_declarations_nov2026", JSON.stringify(store));
-
-      // Feedback επιτυχίας
-      alertBox.className = "alert alert-success";
-      alertBox.innerText = "Η δήλωση ενδιαφέροντος καταχωρήθηκε επιτυχώς στη Μεγάλη Γραμματεία!";
-      alertBox.style.display = "block";
-
-      // Reset
-      document.getElementById("officer-select").value = "";
-      document.getElementById("officer-manual").value = "";
-      selectedBoxes.forEach(chk => chk.checked = false);
-
-      window.scrollTo({ top: 100, behavior: 'smooth' });
+        document.getElementById("officer-select").value = "";
+        document.getElementById("officer-manual").value = "";
+        selectedBoxes.forEach(chk => chk.checked = false);
+      } catch (err) {
+        showAlert("error", apiErrorText(err));
+      } finally {
+        btn.disabled = false;
+      }
     }
 
-    // Έλεγχος Κωδικού για Αναφορά
-    function checkAuth() {
-      const enteredPass = document.getElementById("admin-pass").value;
-      if (enteredPass === AUTH_PASS) {
-        document.getElementById("auth-box").style.display = "none";
-        document.getElementById("report-content").style.display = "block";
-        renderReportTable();
-      } else {
-        alert("Λανθασμένος κωδικός πρόσβασης Μεγάλης Γραμματείας.");
+    // Έλεγχος Κωδικού για Αναφορά (ο έλεγχος γίνεται στον server)
+    async function checkAuth() {
+      const btn = document.getElementById("auth-btn");
+      btn.disabled = true;
+      adminKey = document.getElementById("admin-pass").value;
+      try {
+        const ok = await renderReportTable();
+        if (ok) {
+          document.getElementById("auth-box").style.display = "none";
+          document.getElementById("report-content").style.display = "block";
+          document.getElementById("admin-pass").value = "";
+        }
+      } finally {
+        btn.disabled = false;
       }
     }
 
     // Σχεδιασμός Πίνακα Αναφοράς
-    function renderReportTable() {
+    async function renderReportTable() {
+      let result;
+      try {
+        result = await callApi({ action: "report", key: adminKey });
+      } catch (err) {
+        alert(apiErrorText(err));
+        return false;
+      }
+      if (!result.ok) {
+        alert("Λανθασμένος κωδικός πρόσβασης Μεγάλης Γραμματείας.");
+        return false;
+      }
+
+      const store = result.data || {};
       const tbody = document.getElementById("report-table-body");
       tbody.innerHTML = "";
-      const store = JSON.parse(localStorage.getItem("emse_declarations_nov2026") || "{}");
       document.getElementById("print-date").innerText = new Date().toLocaleDateString('el-GR');
 
       MEETINGS.forEach(m => {
         const tr = document.createElement("tr");
         const officers = store[m.id] || [];
 
-        let officersHtml = "";
-        if (officers.length === 0) {
-          officersHtml = `<span class="empty-note">Δεν έχει δηλωθεί εκπρόσωπος</span>`;
-        } else {
-          officersHtml = officers.map(o => `<span class="officer-tag">👤 ${o}</span>`).join(" ");
-        }
-
         tr.innerHTML = `
           <td><strong>${m.date}</strong></td>
           <td><strong>${m.name}</strong> (Αρ. ${m.no})</td>
           <td>${m.prov}</td>
-          <td>${officersHtml}</td>
+          <td></td>
         `;
+
+        // Τα ονόματα προέρχονται από τους χρήστες: textContent, όχι innerHTML
+        const cell = tr.lastElementChild;
+        if (officers.length === 0) {
+          const empty = document.createElement("span");
+          empty.className = "empty-note";
+          empty.textContent = "Δεν έχει δηλωθεί εκπρόσωπος";
+          cell.appendChild(empty);
+        } else {
+          officers.forEach(o => {
+            const tag = document.createElement("span");
+            tag.className = "officer-tag";
+            tag.textContent = "👤 " + o;
+            cell.appendChild(tag);
+            cell.appendChild(document.createTextNode(" "));
+          });
+        }
         tbody.appendChild(tr);
       });
-    }
-
-    // Καθαρισμός δεδομένων (προαιρετικό)
-    function clearDataPrompt() {
-      if (confirm("Προσοχή: Επιθυμείτε τη διαγραφή όλων των καταχωρημένων δηλώσεων ενδιαφέροντος;")) {
-        localStorage.removeItem("emse_declarations_nov2026");
-        renderReportTable();
-      }
+      return true;
     }
 
     // Εκκίνηση
