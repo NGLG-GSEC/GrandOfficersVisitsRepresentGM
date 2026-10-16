@@ -1,7 +1,8 @@
 /**
  * Backend για τη Δήλωση Διάθεσης Εκπροσώπησης Μ.Δ.
- * Αποθηκεύει τις δηλώσεις σε Google Sheet και επιστρέφει την αναφορά
- * μόνο όταν δοθεί σωστός κωδικός (ADMIN_KEY στις Script Properties).
+ * Αποθηκεύει τις δηλώσεις σε Google Sheet και επιστρέφει την αναφορά μόνο
+ * - σε λογαριασμό Google της λίστας ADMIN_EMAILS (Σύνδεση με Google), ή
+ * - με τον σωστό κωδικό (ADMIN_KEY στις Script Properties).
  *
  * Οδηγίες εγκατάστασης: δείτε README.md
  */
@@ -15,6 +16,15 @@ const MEETING_ID_PATTERN = /^[a-z0-9_]{1,40}$/;
 const MAX_MEETINGS = 50;
 
 const MAX_OFFICER_LENGTH = 200;
+
+// Λογαριασμοί Google που βλέπουν την αναφορά χωρίς κωδικό. Μπορεί να αλλάξει
+// χωρίς νέα ανάπτυξη με την ιδιότητα ADMIN_EMAILS (χωρισμένα με κόμμα).
+const DEFAULT_ADMIN_EMAILS = [
+  'dskiad@gmail.com',
+  'i.benetatos@gmail.com',
+  'grand.secretary@nglgreece.gr',
+  'info@nglgreece.gr'
+];
 const MAX_RANK = 10000;
 
 function doPost(e) {
@@ -28,6 +38,7 @@ function doPost(e) {
   if (body.action === 'submit') return submit_(body);
   if (body.action === 'cancel') return cancel_(body);
   if (body.action === 'report') return report_(body);
+  if (body.action === 'config') return config_();
   return json_({ ok: false, error: 'unknown_action' });
 }
 
@@ -93,9 +104,16 @@ function cancel_(body) {
   });
 }
 
+// Ό,τι χρειάζεται η σελίδα για το κουμπί «Σύνδεση με Google» (δημόσια στοιχεία)
+function config_() {
+  return json_({ ok: true, googleClientId: prop_('GOOGLE_CLIENT_ID') });
+}
+
 function report_(body) {
-  const adminKey = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
-  if (!adminKey || String(body.key || '') !== adminKey) {
+  const adminKey = prop_('ADMIN_KEY');
+  const byKey = !!adminKey && !!body.key && String(body.key) === adminKey;
+  const email = byKey ? '' : googleAdmin_(body.idToken);
+  if (!byKey && !email) {
     Utilities.sleep(1000); // επιβράδυνση δοκιμών κωδικού
     return json_({ ok: false, error: 'unauthorized' });
   }
@@ -104,6 +122,34 @@ function report_(body) {
     (byMeeting[r.meetingId] = byMeeting[r.meetingId] || []).push({ officer: r.officer, rank: r.rank });
   });
   return json_({ ok: true, data: byMeeting });
+}
+
+// Επαληθεύει το διακριτικό «Σύνδεση με Google» στην Google και επιστρέφει
+// το email, μόνο αν είναι επιβεβαιωμένο και ανήκει στη λίστα διαχειριστών.
+function googleAdmin_(idToken) {
+  const clientId = prop_('GOOGLE_CLIENT_ID');
+  if (!clientId || typeof idToken !== 'string' || !idToken || idToken.length > 4096) return '';
+  const res = UrlFetchApp.fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(idToken),
+    { muteHttpExceptions: true });
+  if (res.getResponseCode() !== 200) return '';
+  let t;
+  try { t = JSON.parse(res.getContentText()); } catch (err) { return ''; }
+  const email = String(t.email || '').toLowerCase();
+  const verified = t.email_verified === true || t.email_verified === 'true';
+  const issuer = t.iss === 'accounts.google.com' || t.iss === 'https://accounts.google.com';
+  const fresh = Number(t.exp) * 1000 > Date.now();
+  if (t.aud !== clientId || !verified || !issuer || !fresh) return '';
+  return adminEmails_().indexOf(email) !== -1 ? email : '';
+}
+
+function adminEmails_() {
+  const p = prop_('ADMIN_EMAILS');
+  const list = p ? p.split(/[,;\s]+/) : DEFAULT_ADMIN_EMAILS;
+  return list.map(e => e.trim().toLowerCase()).filter(Boolean);
+}
+
+function prop_(name) {
+  return String(PropertiesService.getScriptProperties().getProperty(name) || '').trim();
 }
 
 function withLock_(fn) {
