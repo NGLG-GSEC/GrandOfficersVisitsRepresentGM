@@ -446,6 +446,15 @@
     .auth-alt summary { cursor: pointer; font-size: 13px; color: var(--text-muted); }
     .auth-alt[open] summary { margin-bottom: 12px; }
 
+    .intro p, .intro li { font-size: 14px; line-height: 1.6; }
+    .intro ol { margin: 8px 0 10px 22px; }
+    .header-link {
+      display: inline-block; margin-top: 16px; padding: 8px 18px;
+      border: 1px solid var(--gold); border-radius: 6px;
+      color: var(--gold-light); text-decoration: none;
+      font-size: 13px; font-weight: 600; letter-spacing: 1px;
+    }
+    .header-link:hover { background: var(--gold); color: var(--primary); }
     /* Μέσα στην Ψηφιακή Μεγάλη Γραμματεία (?embed=1): χωρίς τη μεγάλη κεφαλίδα */
     body.embed header { display: none; }
     body.embed { padding-bottom: 10px; }
@@ -465,6 +474,7 @@
     <h2>Μεγάλη Γραμματεία</h2>
     <div class="header-divider"></div>
     <h3 id="view-title">Πίνακας Δήλωσης Διάθεσης για Εκπροσώπηση Μ.Δ. σε Εγκαταστάσεις Σεβ. Διδ.</h3>
+    <a class="header-link" href="https://drive.google.com/drive/folders/1kKR7v86jjs5QJE9-K5uUebvS6nZd9J03?usp=sharing" target="_blank" rel="noopener">ΠΡΩΤΟΚΟΛΛΟ ΕΞΕΡΧΟΜΕΝΩΝ</a>
   </header>
 
   <div class="container">
@@ -478,6 +488,17 @@
     <!-- VIEW 1: Φόρμα Δήλωσης Ενδιαφέροντος -->
     <div id="form-view">
       <div id="alert-msg" class="alert"></div>
+
+      <div class="card intro">
+        <h2 class="card-title">Τι είναι αυτή η σελίδα</h2>
+        <p>Σε αυτή τη σελίδα οι Μεγάλοι Αξιωματικοί δηλώνουν σε ποιες Εγκαταστάσεις Σεβασμίων Διδασκάλων μπορούν να εκπροσωπήσουν τον Σεβασμιώτατο Μεγάλο Διδάσκαλο.</p>
+        <ol>
+          <li>Επιλέξτε το όνομά σας από τον κατάλογο (ή γράψτε το, αν δεν υπάρχει).</li>
+          <li>Σημειώστε τις Στοές που μπορείτε να επισκεφθείτε.</li>
+          <li>Πατήστε «Υποβολή Δήλωσης Διάθεσης». Αν αλλάξει κάτι, μπορείτε να ακυρώσετε τη δήλωσή σας.</li>
+        </ol>
+        <p>Η Μεγάλη Γραμματεία συγκεντρώνει τις δηλώσεις και ο Μέγας Διδάσκαλος ορίζει τους εκπροσώπους, οι οποίοι ενημερώνονται με επιστολή. Στην καρτέλα «Πρόγραμμα Επισκέψεων Μ.Δ.» βλέπετε τις επισκέψεις του Μεγάλου Διδασκάλου.</p>
+      </div>
 
       <div class="card">
         <h2 class="card-title">1. Στοιχεία Αξιωματικού</h2>
