@@ -19,9 +19,8 @@ const MAX_OFFICER_LENGTH = 200;
 
 // Λογαριασμοί Google που βλέπουν την αναφορά χωρίς κωδικό. Μπορεί να αλλάξει
 // χωρίς νέα ανάπτυξη με την ιδιότητα ADMIN_EMAILS (χωρισμένα με κόμμα).
+// Μόνο λογαριασμοί nglgreece.gr: το Client ID είναι «Internal» του οργανισμού.
 const DEFAULT_ADMIN_EMAILS = [
-  'dskiad@gmail.com',
-  'i.benetatos@gmail.com',
   'grand.secretary@nglgreece.gr',
   'info@nglgreece.gr'
 ];

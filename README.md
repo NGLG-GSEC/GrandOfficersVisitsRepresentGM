@@ -21,8 +21,7 @@ https://nglg-gsec.github.io/NGLG-Grand-Secretary/programme/ ενσωματωμέ
 
 **Αναφορά χωρίς κωδικό.** Η καρτέλα της αναφοράς είναι κρυφή. Ανοίγει με
 «Σύνδεση με Google» για τους λογαριασμούς:
-dskiad@gmail.com, i.benetatos@gmail.com, grand.secretary@nglgreece.gr,
-info@nglgreece.gr (λίστα `DEFAULT_ADMIN_EMAILS` στο `Code.gs`, ή ιδιότητα
+grand.secretary@nglgreece.gr και info@nglgreece.gr (λίστα `DEFAULT_ADMIN_EMAILS` στο `Code.gs`, ή ιδιότητα
 `ADMIN_EMAILS`). Μετά την πρώτη είσοδο σε έναν browser, η καρτέλα φαίνεται
 και η είσοδος γίνεται αυτόματα όταν ο browser (π.χ. προφίλ Chrome) είναι
 συνδεδεμένος με τον ίδιο λογαριασμό. Ο κωδικός `ADMIN_KEY` μένει ως
