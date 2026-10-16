@@ -417,6 +417,19 @@
       .print-header h3 { font-size: 13px; font-weight: bold; }
     }
     .print-header { display: none; }
+
+    /* Πρόγραμμα επισκέψεων Μ.Δ. (ενσωματωμένη ζωντανή σελίδα) */
+    #programme-view .programme-bar {
+      display: flex; justify-content: flex-end; margin-bottom: 10px;
+    }
+    #programme-view .programme-bar a {
+      color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: none;
+      border-bottom: 1px solid var(--gold);
+    }
+    #programme-frame {
+      display: block; width: 100%; min-height: 600px; border: 0;
+      border-radius: 6px; background: transparent;
+    }
   </style>
 </head>
 <body>
@@ -426,14 +439,15 @@
     <h1>Εθνική Μεγάλη Στοά της Ελλάδος</h1>
     <h2>Μεγάλη Γραμματεία</h2>
     <div class="header-divider"></div>
-    <h3>Πίνακας Δήλωσης Διάθεσης για Εκπροσώπηση Μ.Δ. σε Εγκαταστάσεις Σεβ. Διδ.</h3>
+    <h3 id="view-title">Πίνακας Δήλωσης Διάθεσης για Εκπροσώπηση Μ.Δ. σε Εγκαταστάσεις Σεβ. Διδ.</h3>
   </header>
 
   <div class="container">
     <!-- Tabs Navigation -->
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchView('form')">Δήλωση Ενδιαφέροντος</button>
-      <button class="tab-btn" onclick="switchView('report')">Διαχειριστική Αναφορά & PDF</button>
+      <button class="tab-btn active" data-view="form" onclick="switchView('form')">Δήλωση Ενδιαφέροντος</button>
+      <button class="tab-btn" data-view="programme" onclick="switchView('programme')">Πρόγραμμα Επισκέψεων Μ.Δ.</button>
+      <button class="tab-btn" data-view="report" onclick="switchView('report')">Διαχειριστική Αναφορά & PDF</button>
     </div>
 
     <!-- VIEW 1: Φόρμα Δήλωσης Ενδιαφέροντος -->
@@ -474,7 +488,15 @@
       </div>
     </div>
 
-    <!-- VIEW 2: Προστατευμένη Αναφορά με Κωδικό -->
+    <!-- VIEW 2: Πρόγραμμα επισκέψεων του Μ.Δ. (ζωντανή σελίδα της Μεγάλης Γραμματείας) -->
+    <div id="programme-view" style="display: none;">
+      <div class="programme-bar">
+        <a id="programme-link" target="_blank" rel="noopener">Άνοιγμα σε νέα καρτέλα ↗</a>
+      </div>
+      <iframe id="programme-frame" title="Πρόγραμμα επισκέψεων του Μεγάλου Διδασκάλου"></iframe>
+    </div>
+
+    <!-- VIEW 3: Προστατευμένη Αναφορά με Κωδικό -->
     <div id="report-view" style="display: none;">
       <!-- Password Prompt Card -->
       <div id="auth-box" class="card" style="max-width: 480px; margin: 40px auto; text-align: center;">
@@ -669,19 +691,45 @@
       });
     }
 
-    // Διαχείριση Tabs
+    // Διαχείριση Tabs (και άμεσοι σύνδεσμοι: #form, #programme, #report)
+    const VIEWS = {
+      form: "Πίνακας Δήλωσης Διάθεσης για Εκπροσώπηση Μ.Δ. σε Εγκαταστάσεις Σεβ. Διδ.",
+      programme: "Πρόγραμμα Επισκέψεων του Σεβασμιωτάτου Μεγάλου Διδασκάλου",
+      report: "Διαχειριστική Αναφορά Εκπροσωπήσεων Μ.Δ."
+    };
     function switchView(view) {
-      const tabBtns = document.querySelectorAll(".tab-btn");
-      tabBtns.forEach(btn => btn.classList.remove("active"));
+      if (!VIEWS[view]) view = "form";
+      document.querySelectorAll(".tab-btn").forEach(btn =>
+        btn.classList.toggle("active", btn.dataset.view === view));
+      Object.keys(VIEWS).forEach(v =>
+        document.getElementById(v + "-view").style.display = v === view ? "block" : "none");
+      document.getElementById("view-title").textContent = VIEWS[view];
+      if (view === "programme") loadProgramme();
+      if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    }
+    window.addEventListener("hashchange", () => switchView(location.hash.slice(1)));
 
-      if (view === 'form') {
-        tabBtns[0].classList.add("active");
-        document.getElementById("form-view").style.display = "block";
-        document.getElementById("report-view").style.display = "none";
-      } else {
-        tabBtns[1].classList.add("active");
-        document.getElementById("form-view").style.display = "none";
-        document.getElementById("report-view").style.display = "block";
+    // Το πρόγραμμα είναι η ζωντανή σελίδα της Μεγάλης Γραμματείας (ίδιο domain),
+    // ώστε να υπάρχει μία μόνο πηγή: ό,τι ενημερώνεται εκεί φαίνεται και εδώ.
+    const PROGRAMME_URL = "https://nglg-gsec.github.io/NGLG-Grand-Secretary/programme/";
+    function loadProgramme() {
+      const frame = document.getElementById("programme-frame");
+      if (frame.src) return;
+      document.getElementById("programme-link").href = PROGRAMME_URL;
+      frame.addEventListener("load", fitProgramme);
+      frame.src = PROGRAMME_URL;
+      setInterval(fitProgramme, 1000);
+    }
+    // Ύψος iframe = ύψος περιεχομένου, ώστε να μη χρειάζεται δεύτερη μπάρα κύλισης
+    function fitProgramme() {
+      const frame = document.getElementById("programme-frame");
+      try {
+        const doc = frame.contentDocument;
+        if (!doc || !doc.documentElement) return;
+        const h = doc.documentElement.scrollHeight;
+        if (h && Math.abs(h - frame.offsetHeight) > 2) frame.style.height = h + "px";
+      } catch (e) {
+        frame.style.height = "80vh"; // άλλο domain: σταθερό ύψος με εσωτερική κύλιση
       }
     }
 
@@ -851,6 +899,7 @@
     window.onload = function() {
       initMeetingsGrid();
       resetFormFields();
+      switchView(location.hash.slice(1) || "form");
     };
     // Και όταν η σελίδα επανέρχεται με «Πίσω» από την cache του browser
     window.addEventListener("pageshow", e => { if (e.persisted) resetFormFields(); });
