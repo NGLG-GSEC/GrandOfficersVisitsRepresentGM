@@ -22,6 +22,16 @@ SAME_TIER = [
 ]
 
 
+# Ο τίτλος είναι «Αναπληρωτής Μέγας Διδάσκαλος» (το Excel γράφει «Αντικαταστάτης»)
+RENAME = [("Αντικαταστάτης Μέγας Διδάσκαλος", "Αναπληρωτής Μέγας Διδάσκαλος")]
+
+
+def fix_title(title):
+    for old, new in RENAME:
+        title = title.replace(old, new)
+    return title
+
+
 def tier_of(title):
     for rx, fn in SAME_TIER:
         m = rx.match(title)
@@ -43,7 +53,7 @@ def main(path):
             m = re.search(r"/\s*((?:19|20)\d{2})", str(current or ""))
             year = int(m.group(1)) if m else year
         rows.append({
-            "aa": int(aa), "title": str(title).strip(), "name": str(name).strip(),
+            "aa": int(aa), "title": fix_title(str(title).strip()), "name": str(name).strip(),
             "year": int(year) if year else None,
         })
 

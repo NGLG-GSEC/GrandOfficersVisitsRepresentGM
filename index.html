@@ -306,6 +306,18 @@
     .officer-filter {
       margin-bottom: 8px;
     }
+    /* Ο Μέγας Διδάσκαλος στην κορυφή του καταλόγου */
+    .gm-line {
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 17px;
+      margin-bottom: 10px;
+    }
+    #officer-select option.gm-option {
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 16px;
+    }
     .field-hint {
       font-size: 12px;
       color: var(--text-muted);
@@ -458,6 +470,7 @@
         <h2 class="card-title">1. Στοιχεία Αξιωματικού</h2>
         <div class="form-group">
           <label for="officer-select">Επιλέξτε το Ονοματεπώνυμό σας & Αξίωμα:</label>
+          <p class="gm-line">Σεβασμιώτατος Αδ. Ιωάννης Μπενετάτος — Μέγας Διδάσκαλος</p>
           <input type="text" id="officer-filter" class="officer-filter" placeholder="Αναζήτηση ονόματος…" autocomplete="off" autocorrect="off" spellcheck="false" oninput="buildOfficerSelect(this.value)">
           <select id="officer-select" autocomplete="off">
             <option value="">-- Επιλέξτε από τον κατάλογο --</option>
@@ -608,6 +621,8 @@
     // Κατάλογος αξιωματικών (officers.js) — ο Μ.Δ. δεν δηλώνει εκπροσώπηση του εαυτού του
     const SELECTABLE = OFFICERS.filter(o => o.rank > 1);
     const officerValue = o => `${o.name} (${o.title})`;
+    // Παλιές δηλώσεις γράφουν «Αντικαταστάτης»· ο τίτλος είναι «Αναπληρωτής Μέγας Διδάσκαλος»
+    const fixTitle = s => String(s).replace(/Αντικαταστάτης Μέγας Διδάσκαλος/g, "Αναπληρωτής Μέγας Διδάσκαλος");
 
     function norm(s) {
       return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -620,6 +635,11 @@
       const keep = select.value;
       const q = norm(filter || "");
       select.length = 1;
+      const gm = document.createElement("option");
+      gm.className = "gm-option";
+      gm.disabled = true;
+      gm.textContent = "Σεβασμιώτατος Αδ. Ιωάννης Μπενετάτος — Μέγας Διδάσκαλος";
+      select.appendChild(gm);
       let group = null, groupName = "";
       SELECTABLE.forEach(o => {
         if (q && !norm(o.name + " " + o.title).includes(q)) return;
@@ -855,8 +875,8 @@
         } else {
           // Σειρά προβαδίσματος· χωρίς αριθμό (χειροκίνητη καταχώρηση) στο τέλος
           const ranked = officers.map(o => ({
-            officer: o.officer,
-            rank: RANK_BY_VALUE.get(norm(o.officer)) || o.rank || null
+            officer: fixTitle(o.officer),
+            rank: RANK_BY_VALUE.get(norm(fixTitle(o.officer))) || o.rank || null
           })).sort((x, y) => (x.rank || Infinity) - (y.rank || Infinity));
 
           const list = document.createElement("ol");
