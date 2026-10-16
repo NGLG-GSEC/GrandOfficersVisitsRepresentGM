@@ -154,6 +154,11 @@
       background: #fff;
       font-family: inherit;
     }
+    #officer-manual::placeholder {
+      color: #b6c0cd;
+      font-style: italic;
+      opacity: 1;
+    }
     select:focus, input:focus {
       outline: none;
       border-color: var(--gold);
@@ -436,7 +441,7 @@
         </div>
         <div class="form-group">
           <label>Ή συμπληρώστε χειροκίνητα (αν δεν είστε στην παραπάνω λίστα):</label>
-          <input type="text" id="officer-manual" placeholder="Ονοματεπώνυμο & Αξίωμα">
+          <input type="text" id="officer-manual" placeholder="π.χ. Παπαδόπουλος Γ. — Αξίωμα" autocomplete="off" autocorrect="off" spellcheck="false">
         </div>
       </div>
 
