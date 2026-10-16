@@ -400,7 +400,7 @@
         <h2 class="card-title">1. Στοιχεία Αξιωματικού</h2>
         <div class="form-group">
           <label for="officer-select">Επιλέξτε το Ονοματεπώνυμό σας & Αξίωμα:</label>
-          <select id="officer-select">
+          <select id="officer-select" autocomplete="off">
             <option value="">-- Επιλέξτε από τον κατάλογο --</option>
             <optgroup label="Εν Ενεργεία Μεγάλοι Αξιωματικοί (2026)">
               <option value="Αλμπάνης Αναστάσιος (Αναπληρωτής Μέγας Διδάσκαλος · Πσεβ. · 2026)">Αλμπάνης Αναστάσιος — Αναπληρωτής Μέγας Διδάσκαλος</option>
@@ -732,9 +732,21 @@
     }
 
     // Εκκίνηση
+    // Ο browser δεν πρέπει να προσυμπληρώνει τα πεδία με παλιές τιμές
+    function resetFormFields() {
+      const manual = document.getElementById("officer-manual");
+      manual.value = "";
+      manual.name = "m" + Math.random().toString(36).slice(2);
+      document.getElementById("officer-select").value = "";
+      document.getElementById("admin-pass").value = "";
+    }
+
     window.onload = function() {
       initMeetingsGrid();
+      resetFormFields();
     };
+    // Και όταν η σελίδα επανέρχεται με «Πίσω» από την cache του browser
+    window.addEventListener("pageshow", e => { if (e.persisted) resetFormFields(); });
   </script>
 </body>
 </html>
