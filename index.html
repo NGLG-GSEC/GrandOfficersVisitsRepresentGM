@@ -303,16 +303,60 @@
     .report-table tr:nth-child(even) {
       background-color: #f8fafc;
     }
-    .officer-tag {
-      display: inline-block;
-      background: #eef2ff;
-      color: #3730a3;
-      padding: 3px 8px;
-      border-radius: 4px;
+    .officer-filter {
+      margin-bottom: 8px;
+    }
+    .field-hint {
       font-size: 12px;
-      margin: 2px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+    .btn-cancel {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px 20px;
+      background: #fff;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+      border-radius: 6px;
+      font-size: 14px;
       font-weight: 600;
-      border: 1px solid #c7d2fe;
+      cursor: pointer;
+    }
+    .btn-cancel:hover:not(:disabled) {
+      background: #fef2f2;
+    }
+    .btn-cancel:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+    .officer-list {
+      list-style: none;
+    }
+    .officer-list li {
+      margin: 3px 0;
+    }
+    .rank-badge {
+      display: inline-block;
+      min-width: 28px;
+      text-align: center;
+      background: var(--primary);
+      color: var(--gold-light);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-right: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .rank-badge.none {
+      background: #94a3b8;
+      color: #fff;
+    }
+    .first-note {
+      color: var(--gold-dark);
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 4px;
     }
     .empty-note {
       color: #94a3b8;
@@ -364,7 +408,7 @@
         border: none;
       }
       .report-actions, .nav-tabs, header { display: none !important; }
-      .lodge-note { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .lodge-note, .rank-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .table-wrap { overflow: visible; }
       .report-table { min-width: 0; }
       .print-header { display: block !important; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 15px; }
@@ -400,50 +444,11 @@
         <h2 class="card-title">1. Στοιχεία Αξιωματικού</h2>
         <div class="form-group">
           <label for="officer-select">Επιλέξτε το Ονοματεπώνυμό σας & Αξίωμα:</label>
+          <input type="text" id="officer-filter" class="officer-filter" placeholder="Αναζήτηση ονόματος…" autocomplete="off" autocorrect="off" spellcheck="false" oninput="buildOfficerSelect(this.value)">
           <select id="officer-select" autocomplete="off">
             <option value="">-- Επιλέξτε από τον κατάλογο --</option>
-            <optgroup label="Εν Ενεργεία Μεγάλοι Αξιωματικοί (2026)">
-              <option value="Αλμπάνης Αναστάσιος (Αναπληρωτής Μέγας Διδάσκαλος · Πσεβ. · 2026)">Αλμπάνης Αναστάσιος — Αναπληρωτής Μέγας Διδάσκαλος</option>
-              <option value="Νικολαϊδης Αθανάσιος (Βοηθός Μέγας Διδάσκαλος · Πσεβ. · 2026)">Νικολαϊδης Αθανάσιος — Βοηθός Μέγας Διδάσκαλος</option>
-              <option value="Ζαχαριάς Βασίλειος (Επαρχιακός Μέγας Διδάσκαλος · Πσεβ. · 2026)">Ζαχαριάς Βασίλειος — Επαρχιακός Μέγας Διδάσκαλος</option>
-              <option value="Παναγάκος Δημήτριος (Πρώτος Μέγας Επόπτης · Πσεβ. · 2026)">Παναγάκος Δημήτριος — Πρώτος Μέγας Επόπτης</option>
-              <option value="Καββαδίας Κωνσταντίνος (Δεύτερος Μέγας Επόπτης · Πσεβ. · 2026)">Καββαδίας Κωνσταντίνος — Δεύτερος Μέγας Επόπτης</option>
-              <option value="Τσουνάκος Ανδρέας (Μέγας Ευχέτης · ΛΣεβ. · 2026)">Τσουνάκος Ανδρέας — Μέγας Ευχέτης</option>
-              <option value="Φασούλας Στυλιανός (Πρόεδρος Συμβ. Γεν. Υποθέσεων · Σεβτ. · 2026)">Φασούλας Στυλιανός — Πρόεδρος Συμβουλίου Γενικών Υποθέσεων</option>
-              <option value="Δημητρίου Φίλιππος (Μέγας Νομοφύλαξ · ΛΣεβ. · 2026)">Δημητρίου Φίλιππος — Μέγας Νομοφύλαξ</option>
-              <option value="Σκιαδόπουλος Δημήτριος (Μέγας Γραμματεύς · Πσεβ. · 2026)">Σκιαδόπουλος Δημήτριος — Μέγας Γραμματεύς</option>
-              <option value="Δουβάρας Νικόλαος (Μέγας Γραμματεύς Εκπαιδεύσεως · Πσεβ. · 2026)">Δουβάρας Νικόλαος — Μέγας Γραμματεύς Εκπαιδεύσεως</option>
-              <option value="Βλάχος Παναγιώτης (Μέγας Θησαυροφύλαξ · Πσεβ. · 2026)">Βλάχος Παναγιώτης — Μέγας Θησαυροφύλαξ</option>
-              <option value="Ζωγραφάκης Δημήτριος (Πρόεδρος Μεγάλου Αγαθοεργού Σώματος · ΛΣεβ. · 2026)">Ζωγραφάκης Δημήτριος — Πρόεδρος Μεγάλου Αγαθοεργού Σώματος</option>
-              <option value="Καλογεράκος Κων/νος (Μέγας Τελετάρχης · Πσεβ. · 2026)">Καλογεράκος Κων/νος — Μέγας Τελετάρχης</option>
-              <option value="Ευφραιμίδης Αναστάσιος (Μέγας Ξιφοφόρος · ΛΣεβ. · 2026)">Ευφραιμίδης Αναστάσιος — Μέγας Ξιφοφόρος</option>
-              <option value="Παντούλας Γεώργιος (Μέγας Επίτροπος των Έργων · ΛΣεβ. · 2026)">Παντούλας Γεώργιος — Μέγας Επίτροπος των Έργων</option>
-              <option value="Χατζηδημητρίου Νικόλαος (Αναπληρωτής Μέγας Γραμματεύς · ΛΣεβ. · 2026)">Χατζηδημητρίου Νικόλαος — Αναπληρωτής Μέγας Γραμματεύς</option>
-              <option value="Δαγαράκης Ιωάννης (Αναπληρωτής Μέγας Καγκελάριος · Σεβ. · 2026)">Δαγαράκης Ιωάννης — Αναπληρωτής Μέγας Καγκελάριος</option>
-              <option value="Γρίσπος Άγγελος (Αναπληρωτής Μέγας Τελετάρχης · Πσεβ. · 2026)">Γρίσπος Άγγελος — Αναπληρωτής Μέγας Τελετάρχης</option>
-              <option value="Κούκουρας Βασίλειος (Αναπληρωτής Μέγας Τελετάρχης · ΛΣεβ. · 2026)">Κούκουρας Βασίλειος — Αναπληρωτής Μέγας Τελετάρχης</option>
-              <option value="Λεπτοκαρύδης Φίλιππος (Μέγας Έφορος Βιβλιοθήκης & Μουσείου · Πσεβ. · 2026)">Λεπτοκαρύδης Φίλιππος — Μέγας Έφορος Βιβλιοθήκης & Μουσείου</option>
-              <option value="Πιπέρης Βασίλειος (Πρώτος Μέγας Διάκονος · Σεβ. · 2026)">Πιπέρης Βασίλειος — Πρώτος Μέγας Διάκονος</option>
-              <option value="Γκρίλλας Γεώργιος (Δεύτερος Μέγας Διάκονος · Σεβ. · 2026)">Γκρίλλας Γεώργιος — Δεύτερος Μέγας Διάκονος</option>
-              <option value="Γρηγορίου Δημοσθένης (Βοηθός Μέγας Καγκελάριος · Σεβ. · 2026)">Γρηγορίου Δημοσθένης — Βοηθός Μέγας Καγκελάριος</option>
-              <option value="Διαβάτης Χρήστος (Βοηθός Μέγας Γραμματεύς · ΛΣεβ. · 2026)">Διαβάτης Χρήστος — Βοηθός Μέγας Γραμματεύς</option>
-              <option value="Τσαγκαρουσιάνος Χρήστος (Βοηθός Μέγας Γραμματεύς · ΛΣεβ. · 2026)">Τσαγκαρουσιάνος Χρήστος — Βοηθός Μέγας Γραμματεύς</option>
-              <option value="Καρμάλης Κωνσταντίνος (Μέγας Έφορος επί των Διασήμων · Σεβ. · 2026)">Καρμάλης Κωνσταντίνος — Μέγας Έφορος επί των Διασήμων</option>
-              <option value="Ασπιώτης Νικόλαος (Μέγας Οργανιστής · Σεβ. · 2026)">Ασπιώτης Νικόλαος — Μέγας Οργανιστής</option>
-              <option value="Αδαμάκος Κωνσταντίνος (Μέγας Σημαιοφόρος · Σεβ. · 2026)">Αδαμάκος Κωνσταντίνος — Μέγας Σημαιοφόρος</option>
-              <option value="Πιπιλίγκας Γεώργιος (Μέγας Προσαγωγεύς · ΛΣεβ. · 2026)">Πιπιλίγκας Γεώργιος — Μέγας Προσαγωγεύς</option>
-              <option value="Κουφαλιτάκης Γεώργιος (Μέγας Στεγαστής · Σεβ. · 2026)">Κουφαλιτάκης Γεώργιος — Μέγας Στεγαστής</option>
-            </optgroup>
-            <optgroup label="Πρώην Μεγάλοι Αξιωματικοί (Επιλεγμένοι / Συχνή Παρουσία)">
-              <option value="Δούκας Σπυρίδων (Πρώην Επαρχιακός Μέγας Διδάσκαλος · Πσεβ.)">Δούκας Σπυρίδων — Πρώην Επαρχιακός Μέγας Διδάσκαλος</option>
-              <option value="Γεράκιος Εμμανουήλ (Πρώην Μέγας Διδάσκαλος · Σεβτ.)">Γεράκιος Εμμανουήλ — Πρώην Μέγας Διδάσκαλος</option>
-              <option value="Δεληγιώργης Γεώργιος (Πρώην Μέγας Διδάσκαλος · Σεβτ.)">Δεληγιώργης Γεώργιος — Πρώην Μέγας Διδάσκαλος</option>
-              <option value="Σάμιος Αριστείδης (Πρώην Αναπληρωτής Μέγας Διδάσκαλος · Πσεβ.)">Σάμιος Αριστείδης — Πρώην Αναπληρωτής Μέγας Διδάσκαλος</option>
-              <option value="Τριβυζάς Ιωάννης (Πρώην Βοηθός Μέγας Διδάσκαλος · Πσεβ.)">Τριβυζάς Ιωάννης — Πρώην Βοηθός Μέγας Διδάσκαλος</option>
-              <option value="Παπαλουκάς Αριστοφάνης (Πρώην Πρώτος Μέγας Επόπτης · Πσεβ.)">Παπαλουκάς Αριστοφάνης — Πρώην Πρώτος Μέγας Επόπτης</option>
-              <option value="Σκιαδόπουλος Σπυρίδων (Πρώην Πρώτος Μέγας Επόπτης · Πσεβ.)">Σκιαδόπουλος Σπυρίδων — Πρώην Πρώτος Μέγας Επόπτης</option>
-            </optgroup>
           </select>
+          <p class="field-hint">Ο αριθμός μπροστά από κάθε όνομα είναι η σειρά προβαδίσματος (Τάξις και Προβάδισμα).</p>
         </div>
         <div class="form-group">
           <label>Ή συμπληρώστε χειροκίνητα (αν δεν είστε στην παραπάνω λίστα):</label>
@@ -463,6 +468,8 @@
 
         <div style="margin-top: 25px;">
           <button type="button" class="btn-submit" id="submit-btn" onclick="submitDeclaration()">Υποβολη Δηλωσης Διαθεσης</button>
+          <button type="button" class="btn-cancel" id="cancel-btn" onclick="cancelDeclaration()">Ακύρωση Δήλωσης</button>
+          <p class="field-hint">Για ακύρωση: επιλέξτε το όνομά σας και τις Στοές που δεν μπορείτε πλέον να επισκεφθείτε και πατήστε «Ακύρωση Δήλωσης».</p>
         </div>
       </div>
     </div>
@@ -525,6 +532,7 @@
     </div>
   </div>
 
+  <script src="officers.js"></script>
   <script>
     // Στοιχεία Εργασιών Νοεμβρίου 2026
     const MEETINGS = [
@@ -575,6 +583,71 @@
       return "Δεν ήταν δυνατή η επικοινωνία με τη Μεγάλη Γραμματεία. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.";
     }
 
+    // Κατάλογος αξιωματικών (officers.js) — ο Μ.Δ. δεν δηλώνει εκπροσώπηση του εαυτού του
+    const SELECTABLE = OFFICERS.filter(o => o.rank > 1);
+    const officerValue = o => `${o.name} (${o.title})`;
+
+    function norm(s) {
+      return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase().replace(/\s+/g, " ").trim();
+    }
+    const RANK_BY_VALUE = new Map(OFFICERS.map(o => [norm(officerValue(o)), o.rank]));
+
+    function buildOfficerSelect(filter) {
+      const select = document.getElementById("officer-select");
+      const keep = select.value;
+      const q = norm(filter || "");
+      select.length = 1;
+      let group = null, groupName = "";
+      SELECTABLE.forEach(o => {
+        if (q && !norm(o.name + " " + o.title).includes(q)) return;
+        if (o.group !== groupName) {
+          groupName = o.group;
+          group = document.createElement("optgroup");
+          group.label = o.group;
+          select.appendChild(group);
+        }
+        const opt = document.createElement("option");
+        opt.value = officerValue(o);
+        opt.textContent = `${o.rank}. ${o.name}` + (o.title !== o.group ? ` — ${o.title}` : "");
+        group.appendChild(opt);
+      });
+      select.value = keep;
+      // Με ένα μόνο αποτέλεσμα αναζήτησης, επιλέγεται αυτόματα
+      if (q && select.options.length === 2) select.selectedIndex = 1;
+    }
+
+    // Επιστρέφει { officer, rank } ή εμφανίζει μήνυμα και null
+    function readOfficerAndMeetings() {
+      const selectVal = document.getElementById("officer-select").value;
+      const manualVal = document.getElementById("officer-manual").value.trim();
+      document.getElementById("alert-msg").style.display = "none";
+
+      if (selectVal && manualVal) {
+        showAlert("error", "Παρακαλούμε είτε επιλέξτε το όνομά σας από τον κατάλογο είτε πληκτρολογήστε το χειροκίνητα — όχι και τα δύο.");
+        return null;
+      }
+      const officer = manualVal || selectVal;
+      if (!officer) {
+        showAlert("error", "Παρακαλούμε επιλέξτε ή πληκτρολογήστε το ονοματεπώνυμο και το αξίωμά σας.");
+        return null;
+      }
+      const boxes = Array.from(document.querySelectorAll("input[name='meeting_select']:checked"));
+      if (boxes.length === 0) {
+        showAlert("error", "Παρακαλούμε επιλέξτε τουλάχιστον μία Στοά / Εργασία.");
+        return null;
+      }
+      return { officer: officer, rank: RANK_BY_VALUE.get(norm(officer)) || null, boxes: boxes };
+    }
+
+    function clearForm(boxes) {
+      document.getElementById("officer-filter").value = "";
+      buildOfficerSelect("");
+      document.getElementById("officer-select").value = "";
+      document.getElementById("officer-manual").value = "";
+      boxes.forEach(chk => chk.checked = false);
+    }
+
     // Αρχικοποίηση λίστας εργασιών
     function initMeetingsGrid() {
       const grid = document.getElementById("meetings-list");
@@ -614,34 +687,17 @@
 
     // Υποβολή Δηλώσεων
     async function submitDeclaration() {
-      const selectVal = document.getElementById("officer-select").value;
-      const manualVal = document.getElementById("officer-manual").value.trim();
-
-      document.getElementById("alert-msg").style.display = "none";
-
-      if (selectVal && manualVal) {
-        showAlert("error", "Παρακαλούμε είτε επιλέξτε το όνομά σας από τον κατάλογο είτε πληκτρολογήστε το χειροκίνητα — όχι και τα δύο.");
-        return;
-      }
-      const officer = manualVal || selectVal;
-      if (!officer) {
-        showAlert("error", "Παρακαλούμε επιλέξτε ή πληκτρολογήστε το ονοματεπώνυμο και το αξίωμά σας.");
-        return;
-      }
-
-      const selectedBoxes = Array.from(document.querySelectorAll("input[name='meeting_select']:checked"));
-      if (selectedBoxes.length === 0) {
-        showAlert("error", "Παρακαλούμε επιλέξτε τουλάχιστον μία Στοά / Εργασία στην οποία επιθυμείτε να παραστείτε.");
-        return;
-      }
+      const req = readOfficerAndMeetings();
+      if (!req) return;
 
       const btn = document.getElementById("submit-btn");
       btn.disabled = true;
       try {
         const result = await callApi({
           action: "submit",
-          officer: officer,
-          meetings: selectedBoxes.map(chk => chk.value)
+          officer: req.officer,
+          rank: req.rank,
+          meetings: req.boxes.map(chk => chk.value)
         });
         if (!result.ok) throw new Error(result.error);
 
@@ -652,10 +708,41 @@
           msg += " (" + result.duplicates + " από τις επιλογές είχαν ήδη δηλωθεί.)";
         }
         showAlert("success", msg);
+        clearForm(req.boxes);
+      } catch (err) {
+        showAlert("error", apiErrorText(err));
+      } finally {
+        btn.disabled = false;
+      }
+    }
 
-        document.getElementById("officer-select").value = "";
-        document.getElementById("officer-manual").value = "";
-        selectedBoxes.forEach(chk => chk.checked = false);
+    // Ακύρωση Δηλώσεων
+    async function cancelDeclaration() {
+      const req = readOfficerAndMeetings();
+      if (!req) return;
+
+      const names = req.boxes.map(chk => {
+        const m = MEETINGS.find(x => x.id === chk.value);
+        return m ? `${m.name} Αρ. ${m.no} (${m.date})` : chk.value;
+      });
+      if (!confirm("Ακύρωση της δήλωσης για:\n\n" + names.join("\n") + "\n\nΣυνέχεια;")) return;
+
+      const btn = document.getElementById("cancel-btn");
+      btn.disabled = true;
+      try {
+        const result = await callApi({
+          action: "cancel",
+          officer: req.officer,
+          meetings: req.boxes.map(chk => chk.value)
+        });
+        if (!result.ok) throw new Error(result.error);
+
+        if (result.cancelled === 0) {
+          showAlert("error", "Δεν βρέθηκε δήλωσή σας για τις επιλεγμένες Στοές. Ελέγξτε ότι επιλέξατε το ίδιο όνομα με την αρχική δήλωση.");
+        } else {
+          showAlert("success", "Η δήλωσή σας ακυρώθηκε για " + result.cancelled + (result.cancelled === 1 ? " Στοά." : " Στοές."));
+          clearForm(req.boxes);
+        }
       } catch (err) {
         showAlert("error", apiErrorText(err));
       } finally {
@@ -718,13 +805,31 @@
           empty.textContent = "Δεν έχει δηλωθεί εκπρόσωπος";
           cell.appendChild(empty);
         } else {
-          officers.forEach(o => {
-            const tag = document.createElement("span");
-            tag.className = "officer-tag";
-            tag.textContent = "👤 " + o;
-            cell.appendChild(tag);
-            cell.appendChild(document.createTextNode(" "));
+          // Σειρά προβαδίσματος· χωρίς αριθμό (χειροκίνητη καταχώρηση) στο τέλος
+          const ranked = officers.map(o => ({
+            officer: o.officer,
+            rank: RANK_BY_VALUE.get(norm(o.officer)) || o.rank || null
+          })).sort((x, y) => (x.rank || Infinity) - (y.rank || Infinity));
+
+          const list = document.createElement("ol");
+          list.className = "officer-list";
+          ranked.forEach((o, i) => {
+            const li = document.createElement("li");
+            const badge = document.createElement("span");
+            badge.className = "rank-badge" + (o.rank ? "" : " none");
+            badge.textContent = o.rank ? o.rank : "—";
+            badge.title = o.rank ? "Α/Α προβαδίσματος" : "Χειροκίνητη καταχώρηση — χωρίς αριθμό προβαδίσματος";
+            li.appendChild(badge);
+            li.appendChild(document.createTextNode(o.officer));
+            if (i === 0 && ranked.length > 1 && o.rank) {
+              const first = document.createElement("span");
+              first.className = "first-note";
+              first.textContent = "· Προηγείται";
+              li.appendChild(first);
+            }
+            list.appendChild(li);
           });
+          cell.appendChild(list);
         }
         tbody.appendChild(tr);
       });
@@ -737,6 +842,8 @@
       const manual = document.getElementById("officer-manual");
       manual.value = "";
       manual.name = "m" + Math.random().toString(36).slice(2);
+      document.getElementById("officer-filter").value = "";
+      buildOfficerSelect("");
       document.getElementById("officer-select").value = "";
       document.getElementById("admin-pass").value = "";
     }
