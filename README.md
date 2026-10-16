@@ -8,20 +8,30 @@
 - `apps-script/Code.gs` — ο server: αποθηκεύει τις δηλώσεις σε ένα Google Sheet
   και δίνει την αναφορά μόνο με τον σωστό κωδικό.
 
-## Κεντρική σελίδα — όλα τα μενού
+## Μενού και πρόσβαση
 
-Η σελίδα έχει τρεις καρτέλες, ώστε να δουλεύετε από ένα σημείο:
-
-| Καρτέλα | Άμεσος σύνδεσμος |
-| --- | --- |
-| Δήλωση Ενδιαφέροντος | `…/GrandOfficersVisitsRepresentGM/#form` |
-| Πρόγραμμα Επισκέψεων Μ.Δ. | `…/GrandOfficersVisitsRepresentGM/#programme` |
-| Διαχειριστική Αναφορά & PDF | `…/GrandOfficersVisitsRepresentGM/#report` |
+| Καρτέλα | Ποιος τη βλέπει | Άμεσος σύνδεσμος |
+| --- | --- | --- |
+| Δήλωση Ενδιαφέροντος | όλοι | `…/GrandOfficersVisitsRepresentGM/#form` |
+| Πρόγραμμα Επισκέψεων Μ.Δ. | όλοι | `…/GrandOfficersVisitsRepresentGM/#programme` |
+| Διαχειριστική Αναφορά & PDF | μόνο η Μεγάλη Γραμματεία | `…/GrandOfficersVisitsRepresentGM/#report` |
 
 Το «Πρόγραμμα Επισκέψεων Μ.Δ.» είναι η ζωντανή σελίδα
-https://nglg-gsec.github.io/NGLG-Grand-Secretary/programme/ ενσωματωμένη
-(ίδιο domain): ό,τι ενημερώνεται εκεί φαίνεται αυτόματα και εδώ, χωρίς
-δεύτερη συντήρηση.
+https://nglg-gsec.github.io/NGLG-Grand-Secretary/programme/ ενσωματωμένη.
+
+**Αναφορά χωρίς κωδικό.** Η καρτέλα της αναφοράς είναι κρυφή. Ανοίγει με
+«Σύνδεση με Google» για τους λογαριασμούς:
+dskiad@gmail.com, i.benetatos@gmail.com, grand.secretary@nglgreece.gr,
+info@nglgreece.gr (λίστα `DEFAULT_ADMIN_EMAILS` στο `Code.gs`, ή ιδιότητα
+`ADMIN_EMAILS`). Μετά την πρώτη είσοδο σε έναν browser, η καρτέλα φαίνεται
+και η είσοδος γίνεται αυτόματα όταν ο browser (π.χ. προφίλ Chrome) είναι
+συνδεδεμένος με τον ίδιο λογαριασμό. Ο κωδικός `ADMIN_KEY` μένει ως
+εναλλακτική («Είσοδος με κωδικό»).
+
+**Μέσα στην Ψηφιακή Μεγάλη Γραμματεία** (μενού 📅 Δραστηριότητα → Δηλώσεις
+Διάθεσης Μ. Αξιωματικών) η σελίδα ανοίγει με `?embed=1`, χωρίς κεφαλίδα, και
+η αναφορά ανοίγει χωρίς κωδικό: η εφαρμογή στέλνει τον κωδικό της αναφοράς
+από τις Ρυθμίσεις της.
 
 ## Εγκατάσταση (μία φορά, ~10 λεπτά)
 
@@ -37,7 +47,11 @@ https://nglg-gsec.github.io/NGLG-Grand-Secretary/programme/ ενσωματωμέ
    - Ποιος έχει πρόσβαση: **Οποιοσδήποτε**
    - Πατήστε Ανάπτυξη, εγκρίνετε τα δικαιώματα και αντιγράψτε το URL
      (τελειώνει σε `/exec`).
-5. Στο `index.html` βάλτε το URL στη γραμμή:
+5. Για «Σύνδεση με Google»: **Ιδιότητες σεναρίου → Προσθήκη ιδιότητας**
+   `GOOGLE_CLIENT_ID` = το Google OAuth Client ID (το ίδιο με τις Ρυθμίσεις
+   της Ψηφιακής Μεγάλης Γραμματείας· στο Google Cloud πρέπει να έχει
+   Authorized JavaScript origin `https://nglg-gsec.github.io`).
+6. Στο `index.html` βάλτε το URL στη γραμμή:
    ```js
    const API_URL = "https://script.google.com/macros/s/.../exec";
    ```
@@ -75,3 +89,9 @@ python3 tools/build_officers.py Taxis_kai_Provadisma.xlsx > officers.js
 χρειάζεται μοναδικό `id` με λατινικά πεζά, αριθμούς και `_` (π.χ.
 `atlas_118`). Το προαιρετικό πεδίο `note` (π.χ. «Εγκαθίδρυση») εμφανίζεται
 κάτω από το όνομα της Στοάς. Δεν χρειάζεται αλλαγή στο `Code.gs`.
+
+## Ενημέρωση του Code.gs
+
+Μετά από αλλαγή στο `apps-script/Code.gs`: επικολλήστε τον νέο κώδικα στο
+Apps Script → **Ανάπτυξη → Διαχείριση αναπτύξεων → ✏ (Επεξεργασία) →
+Έκδοση: Νέα έκδοση → Ανάπτυξη**. Έτσι το URL `/exec` μένει το ίδιο.

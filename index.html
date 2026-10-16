@@ -438,6 +438,19 @@
       color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: none;
       border-bottom: 1px solid var(--gold);
     }
+    /* Είσοδος Μεγάλης Γραμματείας */
+    .auth-status { font-size: 13px; color: var(--text-muted); margin: 12px 0 0; min-height: 1em; }
+    .auth-status.error { color: #b91c1c; font-weight: 600; }
+    #google-btn { display: flex; justify-content: center; min-height: 44px; }
+    .auth-alt { margin-top: 22px; text-align: left; }
+    .auth-alt summary { cursor: pointer; font-size: 13px; color: var(--text-muted); }
+    .auth-alt[open] summary { margin-bottom: 12px; }
+
+    /* Μέσα στην Ψηφιακή Μεγάλη Γραμματεία (?embed=1): χωρίς τη μεγάλη κεφαλίδα */
+    body.embed header { display: none; }
+    body.embed { padding-bottom: 10px; }
+    body.embed .container { margin-top: 12px; }
+
     #programme-frame {
       display: block; width: 100%; min-height: 600px; border: 0;
       border-radius: 6px; background: transparent;
@@ -459,7 +472,7 @@
     <div class="nav-tabs">
       <button class="tab-btn active" data-view="form" onclick="switchView('form')">Δήλωση Ενδιαφέροντος</button>
       <button class="tab-btn" data-view="programme" onclick="switchView('programme')">Πρόγραμμα Επισκέψεων Μ.Δ.</button>
-      <button class="tab-btn" data-view="report" onclick="switchView('report')">Διαχειριστική Αναφορά & PDF</button>
+      <button class="tab-btn" data-view="report" onclick="switchView('report')" hidden>Διαχειριστική Αναφορά & PDF</button>
     </div>
 
     <!-- VIEW 1: Φόρμα Δήλωσης Ενδιαφέροντος -->
@@ -515,13 +528,18 @@
       <div id="auth-box" class="card" style="max-width: 480px; margin: 40px auto; text-align: center;">
         <h2 class="card-title" style="border: none; padding: 0;">Είσοδος Μεγάλης Γραμματείας</h2>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
-          Απαιτείται κωδικός ασφαλείας για την προβολή των δηλώσεων και την εξαγωγή της αναφοράς.
+          Συνδεθείτε με τον λογαριασμό Google της Μεγάλης Γραμματείας. Μετά την πρώτη φορά, η αναφορά ανοίγει αυτόματα σε αυτόν τον browser.
         </p>
-        <div class="form-group" style="text-align: left;">
-          <label for="admin-pass">Κωδικός Πρόσβασης:</label>
-          <input type="password" id="admin-pass" placeholder="Εισάγετε τον κωδικό">
-        </div>
-        <button class="btn-submit" id="auth-btn" onclick="checkAuth()">Εισοδος στην Αναφορα</button>
+        <div id="google-btn"></div>
+        <p id="auth-status" class="auth-status"></p>
+        <details class="auth-alt" id="auth-alt">
+          <summary>Είσοδος με κωδικό</summary>
+          <div class="form-group">
+            <label for="admin-pass">Κωδικός Πρόσβασης:</label>
+            <input type="password" id="admin-pass" placeholder="Εισάγετε τον κωδικό">
+          </div>
+          <button class="btn-submit" id="auth-btn" onclick="checkAuth()">Εισοδος στην Αναφορα</button>
+        </details>
       </div>
 
       <!-- Actual Report Content (Hidden initially) -->
@@ -590,6 +608,18 @@
 
     // Κωδικός που δόθηκε στην Είσοδο Μεγάλης Γραμματείας (κρατείται μόνο στη μνήμη)
     let adminKey = "";
+    // Διακριτικό «Σύνδεση με Google» (μόνο στη μνήμη· ο server το επαληθεύει σε κάθε αίτημα)
+    let idToken = "";
+
+    // Ποιοι βλέπουν την αναφορά χωρίς κωδικό. Η απόφαση παίρνεται στον server
+    // (apps-script/Code.gs)· εδώ η λίστα χρησιμεύει μόνο για τα μηνύματα της σελίδας.
+    const ADMIN_EMAILS = ["dskiad@gmail.com", "i.benetatos@gmail.com", "grand.secretary@nglgreece.gr", "info@nglgreece.gr"];
+    // Σε αυτόν τον browser έχει γίνει ήδη είσοδος διαχειριστή: φαίνεται η καρτέλα της αναφοράς
+    const ADMIN_HINT = "nglg-declarations-admin";
+    const IS_EMBED = new URLSearchParams(location.search).has("embed");
+    function adminHint() { try { return localStorage.getItem(ADMIN_HINT) || ""; } catch (e) { return ""; } }
+    function setAdminHint(v) { try { v ? localStorage.setItem(ADMIN_HINT, v) : localStorage.removeItem(ADMIN_HINT); } catch (e) { /* */ } }
+    const reportAuth = () => idToken ? { idToken: idToken } : { key: adminKey };
 
     async function callApi(payload) {
       if (!API_URL) throw new Error("not_configured");
@@ -725,6 +755,10 @@
         document.getElementById(v + "-view").style.display = v === view ? "block" : "none");
       document.getElementById("view-title").textContent = VIEWS[view];
       if (view === "programme") loadProgramme();
+      if (view === "report") {
+        if (!idToken && !adminKey) promptGoogle();
+        else if (document.getElementById("report-content").style.display === "none") openReport();
+      }
       if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
     }
     window.addEventListener("hashchange", () => switchView(location.hash.slice(1)));
@@ -819,17 +853,110 @@
     }
 
     // Έλεγχος Κωδικού για Αναφορά (ο έλεγχος γίνεται στον server)
+    function showAdminTab() {
+      document.querySelector('.tab-btn[data-view="report"]').hidden = false;
+    }
+    function authStatus(text, isError) {
+      const el = document.getElementById("auth-status");
+      el.textContent = text || "";
+      el.className = "auth-status" + (isError ? " error" : "");
+    }
+    function currentView() {
+      const b = document.querySelector(".tab-btn.active");
+      return b ? b.dataset.view : "form";
+    }
+
+    // Άνοιγμα της αναφοράς μετά από επιτυχή είσοδο (Google, κωδικός ή Μεγάλη Γραμματεία)
+    async function openReport() {
+      const ok = await renderReportTable();
+      if (ok) {
+        document.getElementById("auth-box").style.display = "none";
+        document.getElementById("report-content").style.display = "block";
+        document.getElementById("admin-pass").value = "";
+      }
+      return ok;
+    }
+
+    // ---- Σύνδεση με Google ----
+    let googleReady = null;
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src; s.async = true; s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+    function initGoogle() {
+      if (googleReady) return googleReady;
+      googleReady = (async () => {
+        let clientId = "";
+        try { clientId = (await callApi({ action: "config" })).googleClientId || ""; } catch (e) { /* */ }
+        if (!clientId) {
+          // Ο server δεν έχει ακόμη ρυθμιστεί για Google: μόνο κωδικός
+          document.getElementById("auth-alt").open = true;
+          return false;
+        }
+        await loadScript("https://accounts.google.com/gsi/client");
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: onGoogleCredential,
+          auto_select: true,
+          login_hint: adminHint() || undefined,
+          use_fedcm_for_prompt: true,
+          cancel_on_tap_outside: false
+        });
+        google.accounts.id.renderButton(document.getElementById("google-btn"),
+          { theme: "filled_blue", size: "large", text: "signin_with", shape: "pill", locale: "el" });
+        return true;
+      })().catch(() => {
+        document.getElementById("auth-alt").open = true;
+        return false;
+      });
+      return googleReady;
+    }
+    // Αυτόματη είσοδος (χωρίς κλικ) όταν ο browser είναι συνδεδεμένος με λογαριασμό της λίστας
+    async function promptGoogle() {
+      if (idToken || adminKey) return;
+      if (await initGoogle()) google.accounts.id.prompt();
+    }
+    function tokenEmail(token) {
+      try {
+        const part = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+        const json = decodeURIComponent(atob(part).split("").map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)).join(""));
+        return String(JSON.parse(json).email || "").toLowerCase();
+      } catch (e) { return ""; }
+    }
+    async function onGoogleCredential(resp) {
+      const email = tokenEmail(resp.credential || "");
+      if (ADMIN_EMAILS.indexOf(email) === -1) {
+        authStatus(`Ο λογαριασμός ${email || "Google"} δεν έχει πρόσβαση στην αναφορά.`, true);
+        return;
+      }
+      idToken = resp.credential;
+      setAdminHint(email);
+      showAdminTab();
+      authStatus("Συνδεθήκατε ως " + email + ".");
+      if (currentView() === "report") await openReport();
+    }
+
+    // Μέσα στην Ψηφιακή Μεγάλη Γραμματεία: ο κωδικός της αναφοράς έρχεται από την εφαρμογή
+    window.addEventListener("message", async e => {
+      if (e.source !== window.parent || e.origin !== location.origin) return;
+      const d = e.data || {};
+      if (d.type !== "nglg-declarations-key" || typeof d.key !== "string" || !d.key) return;
+      adminKey = d.key;
+      showAdminTab();
+      if (currentView() === "report") await openReport();
+    });
+
     async function checkAuth() {
       const btn = document.getElementById("auth-btn");
       btn.disabled = true;
       adminKey = document.getElementById("admin-pass").value;
+      idToken = "";
       try {
-        const ok = await renderReportTable();
-        if (ok) {
-          document.getElementById("auth-box").style.display = "none";
-          document.getElementById("report-content").style.display = "block";
-          document.getElementById("admin-pass").value = "";
-        }
+        if (await openReport()) showAdminTab();
+        else adminKey = "";
       } finally {
         btn.disabled = false;
       }
@@ -839,13 +966,22 @@
     async function renderReportTable() {
       let result;
       try {
-        result = await callApi({ action: "report", key: adminKey });
+        result = await callApi(Object.assign({ action: "report" }, reportAuth()));
       } catch (err) {
         alert(apiErrorText(err));
         return false;
       }
       if (!result.ok) {
-        alert("Λανθασμένος κωδικός πρόσβασης Μεγάλης Γραμματείας.");
+        if (idToken) {
+          // Η σύνδεση Google έληξε (ισχύει 1 ώρα): νέα είσοδος, συνήθως χωρίς κλικ
+          idToken = "";
+          document.getElementById("report-content").style.display = "none";
+          document.getElementById("auth-box").style.display = "block";
+          authStatus("Η σύνδεση έληξε — συνδεθείτε ξανά.", true);
+          promptGoogle();
+        } else {
+          alert("Λανθασμένος κωδικός πρόσβασης Μεγάλης Γραμματείας.");
+        }
         return false;
       }
 
@@ -919,6 +1055,8 @@
     window.onload = function() {
       initMeetingsGrid();
       resetFormFields();
+      if (IS_EMBED) document.body.classList.add("embed");
+      if (adminHint()) { showAdminTab(); promptGoogle(); }
       switchView(location.hash.slice(1) || "form");
     };
     // Και όταν η σελίδα επανέρχεται με «Πίσω» από την cache του browser
