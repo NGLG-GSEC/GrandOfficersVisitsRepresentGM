@@ -27,6 +27,21 @@ const DEFAULT_ADMIN_EMAILS = [
 ];
 const MAX_RANK = 10000;
 
+// Έκδοση του κώδικα: φαίνεται ανοίγοντας το URL /exec στον browser
+const VERSION = 2;
+
+// Έλεγχος εγκατάστασης: ανοίξτε το URL /exec στον browser.
+// Δείχνει μόνο αν υπάρχουν οι ρυθμίσεις, όχι τις τιμές τους.
+function doGet() {
+  return json_({
+    ok: true,
+    version: VERSION,
+    googleClientId: prop_('GOOGLE_CLIENT_ID') ? 'ρυθμίστηκε' : 'ΛΕΙΠΕΙ',
+    adminKey: prop_('ADMIN_KEY') ? 'ρυθμίστηκε' : 'ΛΕΙΠΕΙ',
+    adminEmails: adminEmails_().length
+  });
+}
+
 function doPost(e) {
   let body;
   try {
@@ -106,7 +121,7 @@ function cancel_(body) {
 
 // Ό,τι χρειάζεται η σελίδα για το κουμπί «Σύνδεση με Google» (δημόσια στοιχεία)
 function config_() {
-  return json_({ ok: true, googleClientId: prop_('GOOGLE_CLIENT_ID') });
+  return json_({ ok: true, version: VERSION, googleClientId: prop_('GOOGLE_CLIENT_ID') });
 }
 
 function report_(body) {

@@ -889,14 +889,23 @@
     function initGoogle() {
       if (googleReady) return googleReady;
       googleReady = (async () => {
-        let clientId = "";
-        try { clientId = (await callApi({ action: "config" })).googleClientId || ""; } catch (e) { /* */ }
+        let cfg = null;
+        try { cfg = await callApi({ action: "config" }); } catch (e) { /* */ }
+        const clientId = (cfg && cfg.googleClientId) || "";
         if (!clientId) {
-          // Ο server δεν έχει ακόμη ρυθμιστεί για Google: μόνο κωδικός
+          // Ο server δεν έχει ακόμη ρυθμιστεί για Google: μόνο κωδικός, με την αιτία για τη Γραμματεία
+          authStatus(!cfg ? "Σύνδεση με Google: δεν απαντά ο server (Apps Script)."
+            : cfg.error === "unknown_action" ? "Σύνδεση με Google: τρέχει ακόμη η παλιά έκδοση του Code.gs — χρειάζεται «Νέα έκδοση» στη Διαχείριση αναπτύξεων."
+            : "Σύνδεση με Google: λείπει η ιδιότητα GOOGLE_CLIENT_ID στο Apps Script.", true);
           document.getElementById("auth-alt").open = true;
           return false;
         }
-        await loadScript("https://accounts.google.com/gsi/client");
+        try {
+          await loadScript("https://accounts.google.com/gsi/client");
+        } catch (e) {
+          authStatus("Σύνδεση με Google: δεν φορτώθηκε το accounts.google.com (π.χ. από ad blocker).", true);
+          throw e;
+        }
         google.accounts.id.initialize({
           client_id: clientId,
           callback: onGoogleCredential,
